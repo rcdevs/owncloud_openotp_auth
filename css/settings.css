@@ -1,0 +1,27 @@
+#openotp_general_settings p.p_checkbox { padding-top:3px; } 
+#openotp_general_settings p label {
+	display: inline-block;
+	vertical-align: top;
+	padding-top: 9px;
+}
+
+#openotp_general_settings input[type="text"], #openotp_settings textarea {
+	width: 70%;
+	max-width: 200px;
+	display: inline-block;
+}
+#openotp_general_settings p label.for_text{	
+	width: 20%;
+	max-width: 200px;
+}
+#openotp_general_settings p label.for_checkbox{
+	padding-top:0;
+	vertical-align: middle;
+}
+#openotp_general_settings p label.radio_group_label{
+	padding-bottom:5px;
+	font-weight:bold;
+}
+#openotp_general_settings #message, #openotp_personnal_settings #message{ display:none; }
+#openotp_general_settings #message.success, #openotp_personnal_settings #message.success{ color:green; }
+#openotp_general_settings #message.error, #openotp_personnal_settings #message.error{ color:red; }
