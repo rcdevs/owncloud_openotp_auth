@@ -264,26 +264,50 @@ EOT;
 				$options['proxy_password'] = $this->proxy_password;
 			}
 		}
-			
-		$soap_client = new SoapClient(dirname(__FILE__).'/openotp.wsdl', $options);
-		if (!$soap_client) {
+		try{	
+			$soap_client = new SoapClient(dirname(__FILE__).'/openotp.wsdl', $options);
+		}catch(exception $e){
+			\OCP\Util::writeLog('user_rcdevs', __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
 			return false;
 		}
+		/*if (!$soap_client) {
+			return false;
+		}*/
 		$this->soap_client = $soap_client;	
 		return true;
 	}
 		
 	public function openOTPSimpleLogin($username, $domain, $password, $context){
 		if (!$this->soapRequest()) return false;
-		$resp = $this->soap_client->openotpSimpleLogin($username, $domain, $password, $this->client_id, $this->remote_addr, $this->user_settings, NULL, $context );
+		try{
+			$resp = $this->soap_client->openotpSimpleLogin($username, $domain, $password, $this->client_id, $this->remote_addr, $this->user_settings, NULL, $context );
+		}catch(exception $e){
+			\OCP\Util::writeLog('user_rcdevsopenotp', __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
+			return false;
+		}
 		
 		return $resp;
 	}
 	
 	public function openOTPChallenge($username, $domain, $state, $password, $u2f){
 		if (!$this->soapRequest()) return false;
-		$resp = $this->soap_client->openotpChallenge($username, $domain, $state, $password, $u2f);
-		
+		try{
+			$resp = $this->soap_client->openotpChallenge($username, $domain, $state, $password, $u2f);
+		}catch(exception $e){
+			\OCP\Util::writeLog('user_rcdevsopenotp', __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
+			return false;
+		}
+		return $resp;
+	}
+	
+	public function openOTPStatus(){
+		if (!$this->soapRequest()) return false;
+		try{
+			$resp = $this->soap_client->openotpStatus();
+		}catch(exception $e){
+			\OCP\Util::writeLog('user_rcdevsopenotp', __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
+			return false;
+		}
 		return $resp;
 	}
 }

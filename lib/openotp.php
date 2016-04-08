@@ -60,25 +60,23 @@ class OC_USER_OPENOTP extends OC_User_Backend{
 		foreach($this->possibleActions AS $action => $methodName) {
 			$userBackend=$this->getRealBackend(OCP\User::getUser());
 			if($userBackend===null){$userBackend=$this;}
-			if(method_exists($this, $methodName)) {
+			if(method_exists($userBackend, $methodName)) {
 				$actions |= $action;
 			}
-			
 		}
-		return $actions;
-	}	
 	
+		return $actions;
+	}
+			
     public static function registerBackends($usedBackends){
+      //OC_Log::write('OC_USER_OTP', __FUNCTION__.'().', OC_Log::DEBUG);
       if(self::$_backends === null){
         foreach ($usedBackends as $backend){
-	        if( class_exists($backend) ) self::$_backends[$backend] = new $backend();
-		  	else{
-				$className = "OC_USER_".$backend; 
-				if( class_exists($className) ) self::$_backends[$backend] = new $className();
-			}
+          OC_Log::write('user_rcdevsopenotp', '----------------------  instance '.$backend.' backend.', OC_Log::DEBUG);
+          self::$_backends[$backend] = new $backend();
         }
       }
-    }
+    }		
 	
 	/**
 	 * get user real backend
@@ -92,6 +90,7 @@ class OC_USER_OPENOTP extends OC_User_Backend{
 		foreach (self::$_backends as $backend) {
 			if ($backend->userExists($uid)) {
 				$this->_userBackend = $backend;
+				//OC_Log::write('user_rcdevsopenotp', '--------------------------  function getRealBackend() this->_userBackend: ' . get_class($this->_userBackend), \OC_Log::DEBUG);
 				return $this->_userBackend;
 			}
 		} 
@@ -129,23 +128,27 @@ class OC_USER_OPENOTP extends OC_User_Backend{
 		// this for keep working webdav access and sync apps
 	    // And news api for android new app
 	    // And ocsms app, pictures thumbnails, file sharing	
+		$is_remote = false;
+		
+		
 		$pathinfo = OC_Request::getPathInfo();
+		if( basename($_SERVER['SCRIPT_NAME']) === 'remote.php' || 
+    		preg_match("#^/apps/news/api/v1-2(.*)$#i", $pathinfo) ||
+	        preg_match("#^/apps/ocsms(.*)$#i", $pathinfo) ||
+	        preg_match("#^/apps/files/api/v1/thumbnail(.*)$#i", $pathinfo) ||
+	        preg_match("#^/apps/files_sharing/api/v1/shares(.*)$#i", $pathinfo ) ){
+				$is_remote = true;
+			}
 		if(
-			
-    		( 	( basename($_SERVER['SCRIPT_NAME']) === 'remote.php' || 
-    		  	preg_match("#^/apps/news/api/v1-2(.*)$#i", $pathinfo) ||
-	          	preg_match("#^/apps/ocsms(.*)$#i", $pathinfo) ||
-	          	preg_match("#^/apps/files/api/v1/thumbnail(.*)$#i", $pathinfo) ||
-	          	preg_match("#^/apps/files_sharing/api/v1/shares(.*)$#i", $pathinfo )
-  	  			)
-				&& $disable_openotp_on_remote === "on"
-			) 
-			|| ( $allow_user_administer_openotp === "on" && $user_enable_openotp === "no" && $authentication_method !== AUTHENTICATION_METHOD_STD )
+			( $is_remote === true && $disable_openotp_on_remote === "on" ) 
+			//|| ( $allow_user_administer_openotp === "on" && $user_enable_openotp === "no" && $authentication_method !== AUTHENTICATION_METHOD_STD )
+			|| ( $allow_user_administer_openotp === "on" && $user_enable_openotp === "no" )
 			|| ( $allow_user_administer_openotp !== "on" && $authentication_method === AUTHENTICATION_METHOD_STD )
 		){
+			OC_Log::write('rcdevsopenotp', '********* New Standard Authentication *********', \OC_Log::INFO);
 			return $userDB->checkPassword($uid, $password);
 		}else{
-			OC_Log::write('rcdevsopenotp', '********* New Instance OpenOTP *********', \OC_Log::INFO);
+			OC_Log::write('rcdevsopenotp', '********* New OpenOTP Authentication *********', \OC_Log::INFO);
 			// get App Configs
 			$_openotp_configs = OPENOTP_CONFIG::$_openotp_configs;
 			
@@ -156,6 +159,8 @@ class OC_USER_OPENOTP extends OC_User_Backend{
 			}
 			$params['rcdevsopenotp_remote_addr'] = OC_Request::getRemoteAddress();
 			$appPath = OC_App::getAppPath('user_rcdevsopenotp');
+			// Force LDAP if Force local password on remote is unchecked
+			if ( $is_remote === true ) $params['rcdevsopenotp_user_settings'] = "openOTP.loginMode=LDAP";
 			$openotpAuth = new openotpAuth($params, $appPath);
 			
 			// check OpenOTP WSDL file
@@ -322,7 +327,6 @@ class OC_USER_OPENOTP extends OC_User_Backend{
 
 
 	public function __call($name, $arguments){
-		//OC_Log::write('rcdevsopenotp', $name.'().', OC_Log::DEBUG);
 		$userBackend=$this->getRealBackend(OCP\User::getUser());
 		if($userBackend===null){
 			//bug fix lost password link

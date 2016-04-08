@@ -39,6 +39,7 @@ OCP\App::registerAdmin( 'user_rcdevsopenotp','adminsettings' );
 OCP\App::registerPersonal( 'user_rcdevsopenotp', 'personnalsettings' );
 OCP\Util::addScript('user_rcdevsopenotp', 'context');
 OCP\Util::addScript('user_rcdevsopenotp', 'loginform');
+OCP\Util::addStyle('user_rcdevsopenotp', 'settings');
 
 //OC_User::registerBackend("OPENOTP");
 $usedBackends = OC_User::getUsedBackends();
@@ -46,29 +47,32 @@ OC_User::clearBackends();
 OC_USER_OPENOTP::registerBackends($usedBackends);
 OC_User::useBackend('OPENOTP');
 
-\OCP\App::addNavigationEntry([
-	// the string under which your app will be referenced in owncloud
-	'id' => 'user_rcdevsopenotp',
 
-	// sorting weight for the navigation. The higher the number, the higher
-	// will it be listed in the navigation
-	'order' => 100,
+$isadmin = OC_User::isAdminUser(OC_User::getUser());
+if($isadmin){
+	\OCP\App::addNavigationEntry([
+		// the string under which your app will be referenced in owncloud
+		'id' => 'user_rcdevsopenotp',
 
-	// the route that will be shown on startup
-	'href' => \OCP\Util::linkToRoute('user_rcdevsopenotp.page.index'),
-	//'href' => \OCP\Util::linkToRoute('rcdevsopenotp_adminsettings'),
-	//'href' => OC_Helper::linkTo( "rcdevsopenotp", "adminsettings.php" ),
+		// sorting weight for the navigation. The higher the number, the higher
+		// will it be listed in the navigation
+		'order' => 100,
+
+		// the route that will be shown on startup
+		'href' => \OCP\Util::linkToRoute('user_rcdevsopenotp.page.index'),
+		//'href' => \OCP\Util::linkToRoute('rcdevsopenotp_adminsettings'),
+		//'href' => OC_Helper::linkTo( "rcdevsopenotp", "adminsettings.php" ),
 
 
-	// the icon that will be shown in the navigation
-	// this file needs to exist in img/
-	'icon' => \OCP\Util::imagePath('user_rcdevsopenotp', 'app.svg'),
+		// the icon that will be shown in the navigation
+		// this file needs to exist in img/
+		'icon' => \OCP\Util::imagePath('user_rcdevsopenotp', 'app.svg'),
 
-	// the title of your application. This will be used in the
-	// navigation or on the settings page of your app
-	'name' => \OC_L10N::get('user_rcdevsopenotp')->t('Rcdevs Openotp')
-]);
-	
+		// the title of your application. This will be used in the
+		// navigation or on the settings page of your app
+		'name' => \OC_L10N::get('user_rcdevsopenotp')->t('Rcdevs Openotp')
+	]);
+}
 if(OCP\App::isEnabled('user_webdavauth') || OCP\App::isEnabled('user_ldap')) {
 	OCP\Util::writeLog('rcdevsopenotp',
 		'user_ldap and user_webdavauth are incompatible with OpenOTP Two-factors authentication. OpenOTP server already works with user stored in a Directory backend',

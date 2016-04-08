@@ -88,7 +88,7 @@ class OPENOTP_CONFIG{
 					),			
 				"disable_openotp_on_remote" => 															
 				array(	'name'	=>	'rcdevsopenotp_disable_openotp_on_remote',
-						'label'	=> 'Disable Two-Factor on remote',
+						'label'	=> 'Force Remote Password on Desktop/Mobile Apps authentication. If unchecked, an LDAP only authentication request is sent to OTP server (User settings "openOTP.loginMode=LDAP" overwrites User settings configuration)',
 						'type'	=> 'checkbox',
 						'default_value'	=> 'on',
 						'title'	=>	'Disable OTP on remote (webdav/Mobile Apps and sync)'

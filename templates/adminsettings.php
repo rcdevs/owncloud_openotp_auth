@@ -24,7 +24,6 @@
  */
 
 script('user_rcdevsopenotp', 'script');
-style('user_rcdevsopenotp', 'settings');
 ?>
 <div id="openotp_general_settings" class="section">
 	<form id="openotp_settings" method="POST" action="">
@@ -39,12 +38,15 @@ style('user_rcdevsopenotp', 'settings');
 			} ?>		
 
 		<?php foreach( $_['openotp_allconfig'] as $openotp_config  ):?>
-		<p class="p_<?php p($openotp_config['type']); ?>">
+		<p style="position:relative;" class="p_<?php p($openotp_config['type']); ?>">
 			<?php switch( $openotp_config['type'] ){ 
 					case "text": ?>
 			<label class="for_text" for="<?php p($openotp_config['name']); ?>"><?php p($l->t($openotp_config['label']));?></label>
 			<input type="text" id="<?php p($openotp_config['name']); ?>" name="<?php p($openotp_config['name']); ?>" value="<?php p($_[$openotp_config['name']]); ?>"
 			       title="<?php p($l->t($openotp_config['title']));?>">
+			<?php if( $openotp_config['name'] == "rcdevsopenotp_server_url" ){ ?>
+			<input type="button" id="check_server_url" name="check_server_url" value="Test"/><img id="check_server_loading" src="<?php p(\OCP\Util::imagePath('user_rcdevsopenotp', 'ajax-loader.gif'));?>"/><span style="display:none; padding:6px 15px;" id="message_status"></span><span style="float:right; padding:5px; display:none;" id="message_check_server_url"></span>
+			<?php } ?>
 			<?php 	break;
 					case "checkbox": 
 					?>
@@ -69,7 +71,7 @@ style('user_rcdevsopenotp', 'settings');
 		<p style="margin-top:20px;">
         	<input type="hidden" name="requesttoken" value="<?php p($_['requesttoken']);?>" />
         	<input type="hidden" name="openotp_settings_sent" value="1" />
-	        <input type='submit' id="saveconfig" value='<?php p($l->t('Save'));?>'>			
+	        <input type='submit' id="saveconfig" value='<?php p($l->t('Save'));?>' />			
 		</p>		
 	</form>
 	<div id="message"></div>

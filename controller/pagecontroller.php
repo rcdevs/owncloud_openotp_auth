@@ -100,4 +100,100 @@ class PageController extends Controller {
 		}else
 			return new DataResponse(['status' => "error", 'message' => "An error occured, please contact administrator" ]);
 	}
+	
+	/**
+	 * @NoAdminRequired
+	 */	
+	public function checkServerUrl(){
+		\OC_Log::write('rcdevsopenotp', '********* New OpenOTP Authentication Status *********', \OC_Log::INFO);
+
+		$server_url = $_POST['server_url'];
+		if( $server_url === "" ) return false;
+
+		// get App Configs
+		$_openotp_configs = \OPENOTP_CONFIG::$_openotp_configs;
+		
+		foreach( $_openotp_configs as $_openotp_confname => $_openotp_config ){				
+	        $params[$_openotp_config['name']] = \OCP\Config::getAppValue(
+	            'user_rcdevsopenotp', $_openotp_config['name'], $_openotp_config['default_value']
+	        );
+		}
+		$params['rcdevsopenotp_remote_addr'] = \OC_Request::getRemoteAddress();
+		$params['rcdevsopenotp_server_url'] = stripslashes($server_url);
+		$appPath = \OC_App::getAppPath('user_rcdevsopenotp');
+
+		$openotpAuth = new \openotpAuth($params, $appPath);
+		$resp = $openotpAuth->openOTPStatus();
+		
+		if( $resp )
+			return new DataResponse(['status' => "success", 'openotpStatus' => $resp['status'], 'message' => nl2br($resp['message']) ]);
+		else
+			return new DataResponse(['status' => "error", 'message' => 'Could not connect to host' ]);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 */		
+	public function getGeneratedPassword($args) {
+		//\OC_Log::write('rcdevsopenotp', '********* Get generated Random Password *********', \OC_Log::DEBUG);
+		
+		$username = \OC_User::getUser();
+		$session = \OC::$server->getSession();
+		$randompassword = $session->get('rcdevsopenotp_randompassword_'.$username);
+
+		if (!is_null($randompassword)) {
+			$session->remove('rcdevsopenotp_randompassword_'.$username);
+			return new DataResponse(['status' => "success", 'rcdevsopenotp_randompassword' => $randompassword]);
+		} else {
+			return new DataResponse(['status' => "error"]);
+		}
+	}	
+
+	/**
+	 * @NoAdminRequired
+	 */		
+	public function getNewGeneratedPassword($args) {
+
+		$action = isset($_POST['action']) ? $_POST['action'] : null;
+		\OC_Log::write('rcdevsopenotp', "********* New Random Password Request Action $action *********", \OC_Log::DEBUG);
+		
+		if( !is_null($action) ){
+			switch($action){
+				case "get":
+					\OC_Log::write('rcdevsopenotp', 'Get New generated Random Password for user '.\OC_User::getUser(), \OC_Log::INFO);
+					$new_random_password = \OC_Util::generateRandomBytes(16);  
+		
+					if (!is_null($new_random_password)) {
+						return new DataResponse(['status' => "success", 'rcdevsopenotp_newrandompassword' => $new_random_password]);
+					} else {
+						return new DataResponse(['status' => "error"]);
+					}				
+				break;
+				case "store":
+					$password = isset($_POST['password']) ? $_POST['password'] : null;
+					if( strlen($password) != 16 ) return new DataResponse(['status' => "error"]);
+					if( !is_null($action) ){
+						return $this->changePersonalPassword($password);
+					}
+					
+				break;				
+			}
+		}
+	}	
+	
+	/**
+	 * @NoAdminRequired
+	 */		
+	public function changePersonalPassword($password) {
+		\OC_Log::write('rcdevsopenotp', '********* New OpenOTP Change Password *********', \OC_Log::DEBUG);
+
+		$username = \OC_User::getUser();
+		if(is_null($password)) $password = isset($_POST['openotp_personal-password']) ? $_POST['openotp_personal-password'] : null;
+
+		if (!is_null($password) && \OC_User::setPassword($username, $password)) {
+			return new DataResponse(['status' => "success"]);
+		} else {
+			return new DataResponse(['status' => "error"]);
+		}
+	}	
 }

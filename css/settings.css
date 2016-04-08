@@ -1,3 +1,4 @@
+#openotp_settings{ width:865px; display:block; }
 #openotp_general_settings p.p_checkbox { padding-top:3px; } 
 #openotp_general_settings p label {
 	display: inline-block;
@@ -10,6 +11,9 @@
 	max-width: 200px;
 	display: inline-block;
 }
+#openotp_general_settings p label.for_text, #openotp_general_settings p label.for_checkbox, #openotp_general_settings p label.for_text {
+	width:600px;
+}	
 #openotp_general_settings p label.for_text{	
 	width: 20%;
 	max-width: 200px;
@@ -25,3 +29,65 @@
 #openotp_general_settings #message, #openotp_personnal_settings #message{ display:none; }
 #openotp_general_settings #message.success, #openotp_personnal_settings #message.success{ color:green; }
 #openotp_general_settings #message.error, #openotp_personnal_settings #message.error{ color:red; }
+
+#openotp_general_settings #message_check_server_url{ border:1px solid #37ce02; }
+#openotp_general_settings #message_status{ position:relative; top:-1px; }
+#openotp_general_settings #check_server_loading{ position:absolute; left:142px; top:12px; display:none; }
+#openotp_general_settings span.error{ border-radius: 3px; }
+
+
+/* Local password form */
+#openotp_passwordform_wizard{
+	width:60%;
+	border:1px solid orange;
+    -webkit-border-radius: 5px; 
+    -moz-border-radius: 5px; 
+    border-radius: 5px; 	
+	margin:0 auto;
+	padding:0 20px 20px;
+}
+#openotp_passwordform{
+	margin-top:20px;
+}
+
+#openotp_passwordform #openotp_passwordchanged{
+	color:green;
+}
+#openotp_passwordform #openotp_passworderror{
+	color:red;
+}
+
+#firstrunwizard #openotp_passwordform h1{
+	margin-top:10px;
+	color:orange;
+}
+#openotp_passwordform h3{
+	margin:auto auto 10px auto;
+}
+#openotp_passwordform h4{
+	font-size:1.1em;
+	font-weight:bold;
+	margin-top:10px;	
+}
+#openotp_passwordchanged, #openotp_passworderror{
+	display:none;
+}
+#openotp_passwordbutton {
+	margin-left: .5em;
+}
+
+#openotp_passwordform #openotp_generatepassword,
+#openotp_passwordform #openotp_show_generatedpassword,
+#openotp_passwordform #openotp_savepasswordbutton{
+	display:inline-block;
+	text-align:center;
+}
+
+#openotp_passwordform #openotp_show_generatedpassword{
+	width:200px;
+	border:1px solid #ddd;
+	padding:4px;
+	margin-right:2px;
+}
+
+

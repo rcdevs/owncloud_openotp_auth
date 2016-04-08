@@ -34,6 +34,7 @@ class OC_USER_OPENOTP_Hooks {
 
 		$uid = $parameters['uid'];
 		$userDB = new OC_User_Database();
+		$session = \OC::$server->getSession();
 		$autocreate_user = OCP\Config::getAppValue('user_rcdevsopenotp','rcdevsopenotp_autocreate_user');
          
         if( !$userDB->userExists($uid) ) {
@@ -46,9 +47,13 @@ class OC_USER_OPENOTP_Hooks {
                     /*
                      * Create New user
                      */
-                    $random_password = \OC_Util::generateRandomBytes(20);  
+                    $random_password = \OC_Util::generateRandomBytes(16);  
                     $userDB->createUser($uid, $random_password);
                     $userDB->setDisplayName($uid, $uid);
+					/* 
+					 * Store to session
+					 */
+					$session->set('rcdevsopenotp_randompassword_'.$uid, $random_password);
                     
 					OC_Log::write('user_rcdevsopenotp','New user has been created with username '.$uid, OC_Log::INFO);
                 }

@@ -29,6 +29,10 @@ return [
     'routes' => [
 	   ['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
 	   ['name' => 'page#saveconfig', 'url' => '/saveconfig', 'verb' => 'POST'],
+	   ['name' => 'page#checkServerUrl', 'url' => '/check_server_url', 'verb' => 'POST'],
+	   ['name' => 'page#changePersonalPassword', 'url' => '/change_personal_password', 'verb' => 'POST'],
+	   ['name' => 'page#getGeneratedPassword', 'url' => '/get_generated_password', 'verb' => 'POST'],
+	   ['name' => 'page#getNewGeneratedPassword', 'url' => '/get_new_generated_password', 'verb' => 'POST'],
     ]
 ];
 

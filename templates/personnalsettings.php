@@ -24,7 +24,6 @@
  */
 
 script('user_rcdevsopenotp', 'script');
-style('user_rcdevsopenotp', 'settings');
 $allow_user_administer_openotp = OCP\Config::getAppValue('user_rcdevsopenotp','rcdevsopenotp_allow_user_administer_openotp');
 ?>
 

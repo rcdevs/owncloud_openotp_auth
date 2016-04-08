@@ -76,10 +76,14 @@ Version 1.0
 
 -	Navigate to the 'Admin' page, or go to the 'RCDevs OpenOTP' Application Menu to set at 
 	least the server url and the Client Id, Click 'Save'
--	Configure if you want the authentication requests to be sent to OpenOTP on remote access
-	!! IMPORTANT !! We recommand to disable Two-Factor on remote until feature will be fully 
-	supported in next update.
+-	Configure if you want the authentication requests to be sent to OpenOTP on remote access,
+	the loginMode will be forced to LDAP because the Desktop/Mobile application sends authentication
+	for every requests so Two-factor is not possible right now.
+	!! IMPORTANT !! We recommand to check "Force Remote Password on Desktop/Mobile Apps authentication"
+	and use the Remote Password (=local Owncloud Password) 
 -	Allow users to administer Two-factor on their profile settings page or not
+-	At first Login, owncloud displays a popup with a Random Generated Password to use for remote connection.
+	If users don't keep safely the code on first login, they will be able to do it in "Personal" area on nexts logins.
 -	During configuration of your plugin:
 		-> Select "Two-Factor OR Standard authentication (Enable OpenOTP or Owncloud 
 		Password)", even if you are not able to connect, Owncloud password remains active.
@@ -99,3 +103,18 @@ Version 1.0
 1.0.0
      Initial public release.
  
+ 
+## Publish to App Store
+
+First get an account for the [App Store](http://apps.owncloud.com/) then run:
+
+    make appstore
+
+**ocdev** will ask for your App Store credentials and save them to ~/.ocdevrc which is created afterwards for reuse.
+
+If the <ocsid> field in **appinfo/info.xml** is not present, a new app will be created on the appstore instead of updated. You can look up the ocsid in the app page URL, e.g.: **http://apps.owncloud.com/content/show.php/News?content=168040** would use the ocsid **168040**
+
+## Running tests
+After [Installing PHPUnit](http://phpunit.de/getting-started.html) run:
+
+    phpunit -c phpunit.xml

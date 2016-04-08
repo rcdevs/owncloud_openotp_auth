@@ -11,7 +11,7 @@
 (function ($, OC) {
 
 	$(document).ready(function () {
-
+		
 		$('#openotp_settings #saveconfig').click(function () {
 			var url = OC.generateUrl('/apps/user_rcdevsopenotp/saveconfig');
 			var post = {
@@ -31,6 +31,7 @@
 	        return false;
 		});		
 		
+		
 		$('#openotp_psettings input[name="enable_openotp"]:radio').change(function() {
 				var url = OC.generateUrl('/apps/user_rcdevsopenotp/saveconfig');
 				var post = {
@@ -49,7 +50,43 @@
 		        });
 		        return false;					  
 		    });
+			
+			
+		$('#check_server_url').click(function () {
+			check_server_url();
+		});					
+		
+		if ( $("#openotp_settings").length ) {
+			check_server_url();			
+		}
 		
 	});
 
 })(jQuery, OC);
+
+function check_server_url() {
+	var url = OC.generateUrl('/apps/user_rcdevsopenotp/check_server_url');
+	var server_url_val = $( "#openotp_settings #rcdevsopenotp_server_url" ).val();
+	
+	$("#check_server_loading").fadeIn();
+    $.post( url, { server_url: server_url_val }, function(response){
+		/*if($('#message_check_server_url').is(":visible")){
+			$('#message_check_server_url').fadeOut("fast"); 
+		}*/
+        if( response.status == "success" ){
+			$("#check_server_loading").fadeOut();
+			console.log(response.openotpStatus);
+			if( response.openotpStatus === false){ 
+				$('#message_status').removeClass('success').addClass('error').fadeIn('fast');
+				$('#message_check_server_url').fadeOut('fast');
+			}else{
+        		$('#message_status').removeClass('error').addClass('success').fadeIn('fast');
+        		$('#message_check_server_url').removeClass('error').html(response.message).fadeIn('fast');
+			}
+        }else{
+			$("#check_server_loading").fadeOut();
+        	$('#message_status').removeClass('success').addClass('error').fadeIn('fast');
+        	$('#message_check_server_url').fadeOut('fast');
+        }
+    });			
+}
