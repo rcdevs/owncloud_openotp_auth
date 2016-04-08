@@ -241,7 +241,9 @@ class OC_USER_OPENOTP extends OC_User_Backend{
 					
 					$this->session->set('rcdevsopenotp_challenge_params', $rcdevsopenotp_challenge_params);
 
-					OCP\Util::addHeader('script', array('type' => 'text/javascript', 'src' => 'chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/u2f-api.js'), "");
+					//OCP\Util::addHeader('script', array('type' => 'text/javascript', 'src' => 'chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/u2f-api.js'), "");
+					$appWebPath = OC_App::getAppWebPath('user_rcdevsopenotp');
+					OCP\Util::addHeader('script', array('type' => 'text/javascript', 'src' => $appWebPath . '/js/fidou2f.js'), ""); 
 
 					$src = OC_Helper::linkToRoute('openotpoverlay');
 					OCP\Util::addHeader('script', array('type' => 'text/javascript', 'src' => $src), "");

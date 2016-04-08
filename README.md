@@ -1,7 +1,7 @@
 # Rcdevs Openotp
 
-RCDevs OpenOTP Plugin for Owncloud version 1.0.0
-Copyright (c) 2010-2015 RCDevs SA, All rights reserved.
+RCDevs OpenOTP Plugin for OwnCould version 1.0.1
+Copyright (c) 2010-2013 RCDevs SA, All rights reserved.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -99,7 +99,11 @@ Version 1.0
 			Replace *PREFIX* by owncloud table prefix 'oc_' by default
 
 
+
 **********   CHANGELOG  **********
+1.0.1
+	Enhanced remote Password
+	Add FidoU2F.js library to avoid to installation of the U2F plugin in Google Chrome 
 1.0.0
      Initial public release.
  

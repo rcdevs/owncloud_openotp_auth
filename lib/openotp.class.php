@@ -245,10 +245,25 @@ EOT;
 		
 EOT;
 
-		if( $u2fChallenge ) $overlay .= " $(document).ready(function(){ " . "\r\n";
+		/*if( $u2fChallenge ) $overlay .= " $(document).ready(function(){ " . "\r\n";
 		if( $u2fChallenge ) $overlay .= " if (typeof u2f !== 'object' || typeof u2f.sign !== 'function'){ var u2f_activate = document.getElementById('u2f_activate'); u2f_activate.innerHTML = '[Not Supported]'; u2f_activate.style.color='red'; }" . "\r\n";
 		if( $u2fChallenge ) $overlay .= " else {  u2f.sign([".$u2fChallenge."], function(response) { document.getElementsByName('openotp_u2f')[0].value = JSON.stringify(response); document.getElementById('formlogin').submit(); }, $timeout ); }" . "\r\n";
-		if( $u2fChallenge ) $overlay .= " }); " . "\r\n";
+		if( $u2fChallenge ) $overlay .= " }); " . "\r\n";*/
+		
+		if( $u2fChallenge ){ 
+			$overlay .= " $(document).ready(function(){ " . "\r\n";
+			$overlay .= "if (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
+				u2f.sign([".$u2fChallenge."], function(response) { 
+				document.getElementsByName('openotp_u2f')[0].value = JSON.stringify(response); 
+				document.getElementById('formlogin').submit();
+				}, $timeout ); 	}" . "\r\n";
+			$overlay .= " else { 
+				var u2f_activate = document.getElementById('u2f_activate'); 
+				u2f_activate.innerHTML = '[Not Supported]'; 
+				u2f_activate.style.color='red'; 
+				} " . "\r\n";
+			$overlay .= " }); " . "\r\n";
+		}
 		
 		return $overlay;
 	}
@@ -264,6 +279,12 @@ EOT;
 				$options['proxy_password'] = $this->proxy_password;
 			}
 		}
+		
+		$stream_context = stream_context_create(array('ssl' => array('verify_peer' => false)));
+		if ($stream_context){
+			$options['stream_context'] = $stream_context;
+		}		
+		
 		try{	
 			$soap_client = new SoapClient(dirname(__FILE__).'/openotp.wsdl', $options);
 		}catch(exception $e){
