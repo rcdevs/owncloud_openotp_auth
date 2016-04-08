@@ -108,14 +108,16 @@ class OC_USER_OPENOTP extends OC_User_Backend{
     public function checkPassword($uid, $password) {
 		//OC_Log::write('rcdevsopenotp', 'function CheckPassword() ' . $uid . " -> " .$password, \OC_Log::DEBUG);
 		
-		$userBackend=$this->getRealBackend($uid);
-		if ($userBackend===null){
-			return false;
+		$userDB = $this->getRealBackend($uid);
+		if ($userDB === null){
+			$userDB = new OC_User_Database();
 		}
+		
 		//Get Application Config
 		$allow_user_administer_openotp = OCP\Config::getAppValue('user_rcdevsopenotp','rcdevsopenotp_allow_user_administer_openotp');
 		$disable_openotp_on_remote = OCP\Config::getAppValue('user_rcdevsopenotp','rcdevsopenotp_disable_openotp_on_remote'); 
 		$authentication_method = OCP\Config::getAppValue('user_rcdevsopenotp','rcdevsopenotp_authentication_method'); 
+		$autocreate_user = OCP\Config::getAppValue('user_rcdevsopenotp','rcdevsopenotp_autocreate_user');
 		// 0 => AUTHENTICATION_METHOD_STD (Standard)
 		// 1 => AUTHENTICATION_METHOD_STD_OTP (OTP or Standard)
 		// 2 => AUTHENTICATION_METHOD_OTP (OTP)
@@ -141,7 +143,7 @@ class OC_USER_OPENOTP extends OC_User_Backend{
 			|| ( $allow_user_administer_openotp === "on" && $user_enable_openotp === "no" && $authentication_method !== AUTHENTICATION_METHOD_STD )
 			|| ( $allow_user_administer_openotp !== "on" && $authentication_method === AUTHENTICATION_METHOD_STD )
 		){
-			return $userBackend->checkPassword($uid, $password);
+			return $userDB->checkPassword($uid, $password);
 		}else{
 			OC_Log::write('rcdevsopenotp', '********* New Instance OpenOTP *********', \OC_Log::INFO);
 			// get App Configs
@@ -191,8 +193,11 @@ class OC_USER_OPENOTP extends OC_User_Backend{
 				$resp = $openotpAuth->openOTPChallenge( $username, $domain, $state, $password, $u2f );
 			} else {
 				// OpenOTP Login
-				OC_Log::write('rcdevsopenotp', 'New OpenOTP SimpleLogin for user ' . $username, \OC_Log::INFO);
-				$resp = $openotpAuth->openOTPSimpleLogin( $username, $domain, utf8_encode($password), $context );
+				if( !$userDB->userExists($uid) && $autocreate_user !== "on" ) return false;
+				else{
+					OC_Log::write('rcdevsopenotp', 'New OpenOTP SimpleLogin for user ' . $username, \OC_Log::INFO);
+					$resp = $openotpAuth->openOTPSimpleLogin( $username, $domain, utf8_encode($password), $context );
+				}
 			}
 			if (!$resp || !isset($resp['code'])) {
 				OC_Log::write('rcdevsopenotp', "Invalid OpenOTP response for user " . $username , OC_Log::ERROR);
@@ -206,7 +211,7 @@ class OC_USER_OPENOTP extends OC_User_Backend{
 					OC_Log::write('rcdevsopenotp', "OpenOTP Login attempt failed for user " . $username , OC_Log::INFO);
 					
 					if( $authentication_method === AUTHENTICATION_METHOD_STD_OTP ){
-						$return = $userBackend->checkPassword($uid, $password);
+						$return = $userDB->checkPassword($uid, $password);
 						if($return) OC_Log::write('rcdevsopenotp', "User $username has authenticate with Owncloud password" , OC_Log::INFO);
 						else OC_Log::write('rcdevsopenotp', "Standard password Login attempt failed for user " . $username , OC_Log::INFO);
 						return $return;

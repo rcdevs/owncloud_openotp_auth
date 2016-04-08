@@ -32,8 +32,8 @@ define('AUTHENTICATION_METHOD_STD',"0");
 define('AUTHENTICATION_METHOD_STD_OTP',"1");
 define('AUTHENTICATION_METHOD_OTP',"2");
 
-//OC::$CLASSPATH['OC_USER_OPENOTP_Hooks'] = 'user_rcdevsopenotp/lib/hooks.php';
-//OCP\Util::connectHook('OC_User', 'pre_login', 'OC_USER_OPENOTP_Hooks', 'openotp_pre_login');
+OC::$CLASSPATH['OC_USER_OPENOTP_Hooks'] = 'user_rcdevsopenotp/lib/hooks.php';
+OCP\Util::connectHook('OC_User', 'post_login', 'OC_USER_OPENOTP_Hooks', 'openotp_post_login');
 
 OCP\App::registerAdmin( 'user_rcdevsopenotp','adminsettings' );
 OCP\App::registerPersonal( 'user_rcdevsopenotp', 'personnalsettings' );
@@ -68,3 +68,9 @@ OC_User::useBackend('OPENOTP');
 	// navigation or on the settings page of your app
 	'name' => \OC_L10N::get('user_rcdevsopenotp')->t('Rcdevs Openotp')
 ]);
+	
+if(OCP\App::isEnabled('user_webdavauth') || OCP\App::isEnabled('user_ldap')) {
+	OCP\Util::writeLog('rcdevsopenotp',
+		'user_ldap and user_webdavauth are incompatible with OpenOTP Two-factors authentication. OpenOTP server already works with user stored in a Directory backend',
+		OCP\Util::WARN);
+}	

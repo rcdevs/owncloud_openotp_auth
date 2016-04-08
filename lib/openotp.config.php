@@ -99,7 +99,14 @@ class OPENOTP_CONFIG{
 						'type'	=> 'checkbox',
 						'default_value'	=> 'on',
 						'title'	=>	'Disable OTP on remote (webdav/Mobile Apps and sync)'
-					),					
+					),
+				"autocreate_users" =>
+				array(	'name'	=>	'rcdevsopenotp_autocreate_user',
+						'label'	=> 'Autocreate user on first login - Random password generated, displayname equals login name. If this option is disabled and the user does not exist, then the user will be not allowed to log in ownCloud.',
+						'type'	=> 'checkbox',
+						'default_value'	=> 'on',
+						'title'	=>	'Autocreate user'
+					),											
 				"authentication_method" => 															
 				array(	'name'	=>	'rcdevsopenotp_authentication_method',
 						'label' => 'Authentication method',
