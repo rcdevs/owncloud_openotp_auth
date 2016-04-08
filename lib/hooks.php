@@ -32,36 +32,34 @@ class OC_USER_OPENOTP_Hooks {
           
 	static public function openotp_post_login($parameters) {
 
-		$uid = $parameters['uid'];
+		$uid = strtolower($parameters['uid']);
 		$userDB = new OC_User_Database();
 		$session = \OC::$server->getSession();
 		$autocreate_user = OCP\Config::getAppValue('user_rcdevsopenotp','rcdevsopenotp_autocreate_user');
-         
-        if( !$userDB->userExists($uid) ) {
+        
+       if( !$userDB->userExists($uid) ) {
 			if( $autocreate_user === "on" ){
                 if (preg_match( '/[^a-zA-Z0-9 _\.@\-]/', $uid)) {
                         OC_Log::write('user_rcdevsopenotp','Invalid username "'.$uid.'", allowed caracters: "a-zA-Z0-9" and "_.@-" ',OC_Log::DEBUG);
                         return false;                                                
                 }
                 else {
-                    /*
-                     * Create New user
-                     */
                     $random_password = \OC_Util::generateRandomBytes(16);  
                     $userDB->createUser($uid, $random_password);
                     $userDB->setDisplayName($uid, $uid);
-					/* 
-					 * Store to session
-					 */
+
 					$session->set('rcdevsopenotp_randompassword_'.$uid, $random_password);
                     
 					OC_Log::write('user_rcdevsopenotp','New user has been created with username '.$uid, OC_Log::INFO);
+					return true;
                 }
 			}else{
 				OC_Log::write('user_rcdevsopenotp','Cannot create user with username '.$uid.' - Autocreate setting is disabled in admin panel', OC_Log::INFO);
 			}
+        }else{
+        	OC_Log::write('user_rcdevsopenotp','User already exists with username '.$uid, OC_Log::INFO);
         }
 
-		return true;
+		return false;
 	}
 }

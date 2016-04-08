@@ -1,7 +1,7 @@
 # Rcdevs Openotp
 
-RCDevs OpenOTP Plugin for SugarCRM version 1.2.0
-Copyright (c) 2010-2013 RCDevs SA, All rights reserved.
+RCDevs OpenOTP Plugin for Owncloud version 1.0.0
+Copyright (c) 2010-2015 RCDevs SA, All rights reserved.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -103,18 +103,3 @@ Version 1.0
 1.0.0
      Initial public release.
  
- 
-## Publish to App Store
-
-First get an account for the [App Store](http://apps.owncloud.com/) then run:
-
-    make appstore
-
-**ocdev** will ask for your App Store credentials and save them to ~/.ocdevrc which is created afterwards for reuse.
-
-If the <ocsid> field in **appinfo/info.xml** is not present, a new app will be created on the appstore instead of updated. You can look up the ocsid in the app page URL, e.g.: **http://apps.owncloud.com/content/show.php/News?content=168040** would use the ocsid **168040**
-
-## Running tests
-After [Installing PHPUnit](http://phpunit.de/getting-started.html) run:
-
-    phpunit -c phpunit.xml

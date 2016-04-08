@@ -9,11 +9,12 @@
     <namespace>User_RcdevsOpenotp</namespace>
     <category>other</category>
 	<website>http://www.rcdevs.com/products/openotp/</website>	
+	<requiremin>8.0</requiremin>
     <dependencies>
 		<php min-version="5.4"/>
         <lib>soap</lib>
         <lib>ldap</lib>
-        <owncloud min-version="8.0" />
+        <owncloud min-version="8.0"/>
     </dependencies>
 	<types>
         <prelogin/>

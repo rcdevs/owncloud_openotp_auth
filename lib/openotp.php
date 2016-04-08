@@ -72,7 +72,7 @@ class OC_USER_OPENOTP extends OC_User_Backend{
       //OC_Log::write('OC_USER_OTP', __FUNCTION__.'().', OC_Log::DEBUG);
       if(self::$_backends === null){
         foreach ($usedBackends as $backend){
-          OC_Log::write('user_rcdevsopenotp', '----------------------  instance '.$backend.' backend.', OC_Log::DEBUG);
+          //OC_Log::write('user_rcdevsopenotp', '----------------------  instance '.$backend.' backend.', OC_Log::DEBUG);
           self::$_backends[$backend] = new $backend();
         }
       }
@@ -106,7 +106,7 @@ class OC_USER_OPENOTP extends OC_User_Backend{
      */
     public function checkPassword($uid, $password) {
 		//OC_Log::write('rcdevsopenotp', 'function CheckPassword() ' . $uid . " -> " .$password, \OC_Log::DEBUG);
-		
+		$uid = strtolower($uid);
 		$userDB = $this->getRealBackend($uid);
 		if ($userDB === null){
 			$userDB = new OC_User_Database();
