@@ -4,7 +4,7 @@
  *
  * @package user_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2015 RCDEVS info@rcdevs.com
+ * @copyright 2016 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -105,7 +105,7 @@ class PageController extends Controller {
 	 * @NoAdminRequired
 	 */	
 	public function checkServerUrl(){
-		\OC_Log::write('rcdevsopenotp', '********* New OpenOTP Authentication Status *********', \OC_Log::INFO);
+		\OCP\Util::writeLog('OC_USER_OPENOTP', '********* New OpenOTP Authentication Status *********', \OCP\Util::INFO);
 
 		$server_url = $_POST['server_url'];
 		if( $server_url === "" ) return false;
@@ -118,10 +118,10 @@ class PageController extends Controller {
 	            'user_rcdevsopenotp', $_openotp_config['name'], $_openotp_config['default_value']
 	        );
 		}
-		$params['rcdevsopenotp_remote_addr'] = \OC_Request::getRemoteAddress();
+		$params['rcdevsopenotp_remote_addr'] = \OC::$server->getRequest()->getRemoteAddress();
 		$params['rcdevsopenotp_server_url'] = stripslashes($server_url);
 		$appPath = \OC_App::getAppPath('user_rcdevsopenotp');
-
+		
 		$openotpAuth = new \openotpAuth($params, $appPath);
 		$resp = $openotpAuth->openOTPStatus();
 		
@@ -135,7 +135,7 @@ class PageController extends Controller {
 	 * @NoAdminRequired
 	 */		
 	public function getGeneratedPassword($args) {
-		//\OC_Log::write('rcdevsopenotp', '********* Get generated Random Password *********', \OC_Log::DEBUG);
+		//\OCP\Util::writeLog('OC_USER_OPENOTP', '********* Get generated Random Password *********', \OCP\Util::DEBUG);
 		
 		$username = \OC_User::getUser();
 		$session = \OC::$server->getSession();
@@ -155,13 +155,13 @@ class PageController extends Controller {
 	public function getNewGeneratedPassword($args) {
 
 		$action = isset($_POST['action']) ? $_POST['action'] : null;
-		\OC_Log::write('rcdevsopenotp', "********* New Random Password Request Action $action *********", \OC_Log::DEBUG);
+		\OCP\Util::writeLog('OC_USER_OPENOTP', "********* New Random Password Request Action $action *********", \OCP\Util::DEBUG);
 		
 		if( !is_null($action) ){
 			switch($action){
 				case "get":
-					\OC_Log::write('rcdevsopenotp', 'Get New generated Random Password for user '.\OC_User::getUser(), \OC_Log::INFO);
-					$new_random_password = \OC_Util::generateRandomBytes(16);  
+					\OCP\Util::writeLog('OC_USER_OPENOTP', 'Get New generated Random Password for user '.\OC_User::getUser(), \OCP\Util::INFO);
+					$new_random_password = \OCP\Util::generateRandomBytes(16);  
 		
 					if (!is_null($new_random_password)) {
 						return new DataResponse(['status' => "success", 'rcdevsopenotp_newrandompassword' => $new_random_password]);
@@ -185,7 +185,7 @@ class PageController extends Controller {
 	 * @NoAdminRequired
 	 */		
 	public function changePersonalPassword($password) {
-		\OC_Log::write('rcdevsopenotp', '********* New OpenOTP Change Password *********', \OC_Log::DEBUG);
+		\OCP\Util::writeLog('OC_USER_OPENOTP', '********* New OpenOTP Change Password *********', \OCP\Util::DEBUG);
 
 		$username = \OC_User::getUser();
 		if(is_null($password)) $password = isset($_POST['openotp_personal-password']) ? $_POST['openotp_personal-password'] : null;

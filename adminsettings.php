@@ -4,7 +4,7 @@
  *
  * @package rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2015 RCDEVS info@rcdevs.com
+ * @copyright 2016 RCDEVS info@rcdevs.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -24,7 +24,7 @@
  */
 
 
-OC_Util::checkAdminUser();
+\OC_Util::checkAdminUser();
 $_openotp_configs = OPENOTP_CONFIG::$_openotp_configs;
 $_openotp_admintmpl = new OCP\Template('user_rcdevsopenotp', 'adminsettings');
 $_openotp_admintmpl->assign('openotp_allconfig', $_openotp_configs);

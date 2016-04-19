@@ -4,7 +4,7 @@
  *
  * @package user_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2015 RCDEVS info@rcdevs.com
+ * @copyright 2016 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,24 +40,24 @@ class OC_USER_OPENOTP_Hooks {
        if( !$userDB->userExists($uid) ) {
 			if( $autocreate_user === "on" ){
                 if (preg_match( '/[^a-zA-Z0-9 _\.@\-]/', $uid)) {
-                        OC_Log::write('user_rcdevsopenotp','Invalid username "'.$uid.'", allowed caracters: "a-zA-Z0-9" and "_.@-" ',OC_Log::DEBUG);
+                        \OCP\Util::writeLog('OC_USER_OPENOTP','Invalid username "'.$uid.'", allowed caracters: "a-zA-Z0-9" and "_.@-" ',\OCP\Util::DEBUG);
                         return false;                                                
                 }
                 else {
-                    $random_password = \OC_Util::generateRandomBytes(16);  
+                    $random_password = \OCP\Util::generateRandomBytes(16);  
                     $userDB->createUser($uid, $random_password);
                     $userDB->setDisplayName($uid, $uid);
 
 					$session->set('rcdevsopenotp_randompassword_'.$uid, $random_password);
                     
-					OC_Log::write('user_rcdevsopenotp','New user has been created with username '.$uid, OC_Log::INFO);
+					\OCP\Util::writeLog('OC_USER_OPENOTP','New user has been created with username '.$uid, \OCP\Util::INFO);
 					return true;
                 }
 			}else{
-				OC_Log::write('user_rcdevsopenotp','Cannot create user with username '.$uid.' - Autocreate setting is disabled in admin panel', OC_Log::INFO);
+				\OCP\Util::writeLog('OC_USER_OPENOTP','Cannot create user with username '.$uid.' - Autocreate setting is disabled in admin panel', \OCP\Util::INFO);
 			}
         }else{
-        	OC_Log::write('user_rcdevsopenotp','User already exists with username '.$uid, OC_Log::INFO);
+        	\OCP\Util::writeLog('OC_USER_OPENOTP','User already exists with username '.$uid, \OCP\Util::DEBUG);
         }
 
 		return false;
