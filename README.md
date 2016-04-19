@@ -1,7 +1,7 @@
 # Rcdevs Openotp
 
-RCDevs OpenOTP Plugin for OwnCould version 1.0.1
-Copyright (c) 2010-2013 RCDevs SA, All rights reserved.
+RCDevs OpenOTP Plugin for OwnCloud version 1.1.0
+Copyright (c) 2010-2016 RCDevs SA, All rights reserved.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -58,8 +58,8 @@ https://www.rcdevs.com/downloads/index.php?id=VMWare+Appliances
 
 **********   INSTALLATION   **********
 
-Require Owncloud >= 8 
-Version 1.0
+Require Owncloud >= 9 
+Version 1.1.0
 
 1)	If your PHP installation does not have the soap extension, install the php-soap 
 	package for your Linux distribution. With RedHat, do it with 'yum install php-soap'.
@@ -76,11 +76,9 @@ Version 1.0
 
 -	Navigate to the 'Admin' page, or go to the 'RCDevs OpenOTP' Application Menu to set at 
 	least the server url and the Client Id, Click 'Save'
--	Configure if you want the authentication requests to be sent to OpenOTP on remote access,
-	the loginMode will be forced to LDAP because the Desktop/Mobile application sends authentication
-	for every requests so Two-factor is not possible right now.
-	!! IMPORTANT !! We recommand to check "Force Remote Password on Desktop/Mobile Apps authentication"
-	and use the Remote Password (=local Owncloud Password) 
+-	Configure if you want the authentication requests to be sent to OpenOTP on remote access
+	!! IMPORTANT !! We recommand to disable Two-Factor on remote until feature will be fully 
+	supported in next update.
 -	Allow users to administer Two-factor on their profile settings page or not
 -	At first Login, owncloud displays a popup with a Random Generated Password to use for remote connection.
 	If users don't keep safely the code on first login, they will be able to do it in "Personal" area on nexts logins.
@@ -99,11 +97,9 @@ Version 1.0
 			Replace *PREFIX* by owncloud table prefix 'oc_' by default
 
 
-
 **********   CHANGELOG  **********
-1.0.1
-	Enhanced remote Password
-	Add FidoU2F.js library to avoid to installation of the U2F plugin in Google Chrome 
+1.1.0
+	- Application is compatible with OwnCloud Version 9.0.1
 1.0.0
-     Initial public release.
+    - Initial public release.
  
