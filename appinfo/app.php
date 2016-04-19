@@ -4,7 +4,7 @@
  *
  * @package user_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2015 RCDEVS info@rcdevs.com
+ * @copyright 2016 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,32 +23,35 @@
  *
  */
 
-//namespace OCA\RcdevsOpenotp\AppInfo;
-OC::$CLASSPATH['OC_USER_OPENOTP'] = 'user_rcdevsopenotp/lib/openotp.php';
-OC::$CLASSPATH['OPENOTP_CONFIG'] = 'user_rcdevsopenotp/lib/openotp.config.php';
-OC::$CLASSPATH['openotpAuth'] = 'user_rcdevsopenotp/lib/openotp.class.php';
+namespace OCA\user_rcdevsopenotp;
+
+require_once('apps/user_rcdevsopenotp/lib/user_openotp.php');
+
+$coreUserManager = \OC::$server->getUserManager();
+$otpBackend = new lib\OC_USER_OPENOTP($coreUserManager, \OC::$server->getRequest());
+
+\OC::$CLASSPATH['OPENOTP_CONFIG'] = 'user_rcdevsopenotp/lib/openotp.config.php';
+\OC::$CLASSPATH['openotpAuth'] = 'user_rcdevsopenotp/lib/openotp.class.php';
 
 define('AUTHENTICATION_METHOD_STD',"0");
 define('AUTHENTICATION_METHOD_STD_OTP',"1");
 define('AUTHENTICATION_METHOD_OTP',"2");
 
-OC::$CLASSPATH['OC_USER_OPENOTP_Hooks'] = 'user_rcdevsopenotp/lib/hooks.php';
-OCP\Util::connectHook('OC_User', 'post_login', 'OC_USER_OPENOTP_Hooks', 'openotp_post_login');
+\OC::$CLASSPATH['OC_USER_OPENOTP_Hooks'] = 'user_rcdevsopenotp/lib/hooks.php';
+\OCP\Util::connectHook('OC_User', 'post_login', 'OC_USER_OPENOTP_Hooks', 'openotp_post_login');
 
-OCP\App::registerAdmin( 'user_rcdevsopenotp','adminsettings' );
-OCP\App::registerPersonal( 'user_rcdevsopenotp', 'personnalsettings' );
-OCP\Util::addScript('user_rcdevsopenotp', 'context');
-OCP\Util::addScript('user_rcdevsopenotp', 'loginform');
-OCP\Util::addStyle('user_rcdevsopenotp', 'settings');
+\OCP\App::registerAdmin( 'user_rcdevsopenotp','adminsettings' );
+\OCP\App::registerPersonal( 'user_rcdevsopenotp', 'personnalsettings' );
+\OCP\Util::addScript('user_rcdevsopenotp', 'context');
+\OCP\Util::addScript('user_rcdevsopenotp', 'loginform');
+\OCP\Util::addStyle('user_rcdevsopenotp', 'settings');
 
-//OC_User::registerBackend("OPENOTP");
-$usedBackends = OC_User::getUsedBackends();
-OC_User::clearBackends();
-OC_USER_OPENOTP::registerBackends($usedBackends);
-OC_User::useBackend('OPENOTP');
+$usedBackends = $coreUserManager->getBackends();
+\OC_User::clearBackends();
+lib\OC_USER_OPENOTP::registerBackends($usedBackends);
+\OC_User::useBackend($otpBackend);
 
-
-$isadmin = OC_User::isAdminUser(OC_User::getUser());
+$isadmin = \OC_User::isAdminUser(\OC_User::getUser());
 if($isadmin){
 	\OCP\App::addNavigationEntry([
 		// the string under which your app will be referenced in owncloud
@@ -70,11 +73,11 @@ if($isadmin){
 
 		// the title of your application. This will be used in the
 		// navigation or on the settings page of your app
-		'name' => \OC_L10N::get('user_rcdevsopenotp')->t('Rcdevs Openotp')
+		'name' => 'Rcdevs Openotp'
 	]);
 }
-if(OCP\App::isEnabled('user_webdavauth') || OCP\App::isEnabled('user_ldap')) {
-	OCP\Util::writeLog('rcdevsopenotp',
+if(\OCP\App::isEnabled('user_webdavauth') || \OCP\App::isEnabled('user_ldap')) {
+	\OCP\Util::writeLog('rcdevsopenotp',
 		'user_ldap and user_webdavauth are incompatible with OpenOTP Two-factors authentication. OpenOTP server already works with user stored in a Directory backend',
-		OCP\Util::WARN);
+		\OCP\Util::WARN);
 }	
