@@ -7,7 +7,7 @@
     <author>Julien RICHARD</author>
     <version>1.1.0</version>
     <namespace>User_RcdevsOpenotp</namespace>
-    <category>other</category>
+    <category>tools</category>
 	<website>http://www.rcdevs.com/products/openotp/</website>
 	<requiremin>8.0</requiremin>
     <dependencies>
