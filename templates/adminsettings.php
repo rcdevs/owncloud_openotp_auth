@@ -4,7 +4,7 @@
  *
  * @package user_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2015 RCDEVS info@rcdevs.com
+ * @copyright 2016 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,7 +58,7 @@ script('user_rcdevsopenotp', 'script');
 			<div style="display:inline-block;">
 			<?php foreach($openotp_config['radios'] as $name => $radio): ?>	
 					<input type="radio" value="<?php p($radio['value']); ?>" name="<?php p($openotp_config['name']); ?>" id="<?php p($name); ?>" 
-						<?php if (!$_[$openotp_config['name']] && $radio['checked'] ) p(' checked="checked"');
+						<?php if (!$_[$openotp_config['name']] && (isset($radio['checked']) && $radio['checked'] != NULL) ) p(' checked="checked"');
 					  		elseif ($_[$openotp_config['name']] === $radio['value']) p(' checked="checked"'); ?>>
 					<label class="for_radio" for="<?php p($name); ?>"><?php p($l->t($radio['label']));?></label><br/>
 			<?php endforeach; ?>	
