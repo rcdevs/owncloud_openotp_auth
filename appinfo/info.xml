@@ -10,6 +10,7 @@
     <category>tools</category>
 	<website>http://www.rcdevs.com/products/openotp/</website>
 	<requiremin>8.0</requiremin>
+	<ocsid>174704</ocsid>
     <dependencies>
 		<php min-version="5.4"/>
         <lib>soap</lib>
