@@ -57,7 +57,7 @@ class OC_USER_OPENOTP_Hooks {
 				OC_Log::write('user_rcdevsopenotp','Cannot create user with username '.$uid.' - Autocreate setting is disabled in admin panel', OC_Log::INFO);
 			}
         }else{
-        	OC_Log::write('user_rcdevsopenotp','User already exists with username '.$uid, OC_Log::INFO);
+        	OC_Log::write('user_rcdevsopenotp','Found user '.$uid . " - Load profile for user ", OC_Log::INFO);
         }
 
 		return false;
