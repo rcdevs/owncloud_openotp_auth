@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Julien RICHARD <julien.richard@rcdevs.com>
- * @copyright RCDevs - Julien RICHARD 2015
+ * @copyright RCDevs - Julien RICHARD 2016
  */
 /* global OC, t */
 

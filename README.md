@@ -1,7 +1,7 @@
 # Rcdevs Openotp
 
-RCDevs OpenOTP Plugin for OwnCould version 1.0.1
-Copyright (c) 2010-2013 RCDevs SA, All rights reserved.
+RCDevs OpenOTP Plugin for OwnCould version 1.1.1
+Copyright (c) 2010-2016 RCDevs SA, All rights reserved.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -57,9 +57,8 @@ or download our appliances:
 https://www.rcdevs.com/downloads/index.php?id=VMWare+Appliances
 
 **********   INSTALLATION   **********
-
-Require Owncloud >= 8 
-Version 1.0
+Compatible Owncloud 8.x 
+Version 1.1
 
 1)	If your PHP installation does not have the soap extension, install the php-soap 
 	package for your Linux distribution. With RedHat, do it with 'yum install php-soap'.
@@ -101,6 +100,12 @@ Version 1.0
 
 
 **********   CHANGELOG  **********
+1.1.1
+	Added support to OpenOTP Software Token with Push Notif Authentication
+	Extend php soapclient to add timeout capabilities
+	WebService API is now versioned
+	U2F javascript scripts updated
+	OTP Challenge input doesn't show anymore characters in clear text (type=password)   
 1.0.1
 	Enhanced remote Password
 	Add FidoU2F.js library to avoid to installation of the U2F plugin in Google Chrome 

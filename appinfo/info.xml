@@ -5,7 +5,7 @@
     <description>RCDevs OpenOTP Application enable two-factor authentication for your users. It is versatile, device-independent and based on opened security standards. OpenOTP provides fine-grained user identity and access management (IAM), one-time passwords authentication technologies (OTP) and extensive authentication policies for your AD / LDAP users. It is enterprise-ready with strong support for high-availability, load-balancing, multi-tenancy, cloud-readiness, geolocalization, delegated administration and much more.</description>
     <licence>AGPL</licence>
     <author>Julien RICHARD</author>
-    <version>0.0.1</version>
+    <version>1.1.1</version>
     <namespace>User_RcdevsOpenotp</namespace>
     <category>other</category>
 	<website>http://www.rcdevs.com/products/openotp/</website>	
@@ -15,6 +15,7 @@
         <lib>soap</lib>
         <lib>ldap</lib>
         <owncloud min-version="8.0"/>
+        <owncloud min-version="8.0" max-version="8.2"/>
     </dependencies>
 	<types>
         <prelogin/>

@@ -4,7 +4,7 @@
  *
  * @package user_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2015 RCDEVS info@rcdevs.com
+ * @copyright 2016 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -162,7 +162,7 @@ EOT;
 			
 			if( $otpChallenge || ( !$otpChallenge && !$u2fChallenge ) ){		
 			$overlay .= <<<EOT
-			+ '<tr style="border:none;"><td id="inputs_cell" style="text-align:center; padding-top:25px; border:none;"><input style="width:165px; border:1px solid grey; background-color:white; margin-bottom:0; padding:3px; vertical-align:middle;" type="text" size=15 name="openotp_password" id="openotp_password">&nbsp;'
+			+ '<tr style="border:none;"><td id="inputs_cell" style="text-align:center; padding-top:25px; border:none;"><input style="width:165px; border:1px solid grey; background-color:white; margin-bottom:0; padding:3px; vertical-align:middle;" type="password" size=15 name="openotp_password" id="openotp_password">&nbsp;'
 			+ '<input style="vertical-align:middle; padding:5px 10px; margin:5px 5px 0 0;" type="submit" value="Ok" class="button btn btn-primary"></td></tr>'
 EOT;
 			}
@@ -245,24 +245,25 @@ EOT;
 		
 EOT;
 
-		/*if( $u2fChallenge ) $overlay .= " $(document).ready(function(){ " . "\r\n";
-		if( $u2fChallenge ) $overlay .= " if (typeof u2f !== 'object' || typeof u2f.sign !== 'function'){ var u2f_activate = document.getElementById('u2f_activate'); u2f_activate.innerHTML = '[Not Supported]'; u2f_activate.style.color='red'; }" . "\r\n";
-		if( $u2fChallenge ) $overlay .= " else {  u2f.sign([".$u2fChallenge."], function(response) { document.getElementsByName('openotp_u2f')[0].value = JSON.stringify(response); document.getElementById('formlogin').submit(); }, $timeout ); }" . "\r\n";
-		if( $u2fChallenge ) $overlay .= " }); " . "\r\n";*/
 		
-		if( $u2fChallenge ){ 
+		if( $u2fChallenge ){ 			
 			$overlay .= " $(document).ready(function(){ " . "\r\n";
-			$overlay .= "if (/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) {
-				u2f.sign([".$u2fChallenge."], function(response) { 
-				document.getElementsByName('openotp_u2f')[0].value = JSON.stringify(response); 
-				document.getElementById('formlogin').submit();
-				}, $timeout ); 	}" . "\r\n";
+			$overlay .= "if (/chrome|chromium|firefox|opera/.test(navigator.userAgent.toLowerCase())) {
+			    var u2f_request = ".$u2fChallenge.";
+			    var u2f_regkeys = [];
+			    for (var i=0, len=u2f_request.keyHandles.length; i<len; i++) {
+			        u2f_regkeys.push({version:u2f_request.version,keyHandle:u2f_request.keyHandles[i]});
+			    }
+			    u2f.sign(u2f_request.appId, u2f_request.challenge, u2f_regkeys, function(response) {
+					document.getElementsByName('openotp_u2f')[0].value = JSON.stringify(response); 
+					document.getElementById('formlogin').submit();
+			    }, $timeout ); }" . "\r\n";
 			$overlay .= " else { 
 				var u2f_activate = document.getElementById('u2f_activate'); 
 				u2f_activate.innerHTML = '[Not Supported]'; 
 				u2f_activate.style.color='red'; 
-				} " . "\r\n";
-			$overlay .= " }); " . "\r\n";
+				}" . "\r\n";
+			$overlay .= " }); " . "\r\n";			
 		}
 		
 		return $overlay;
@@ -286,7 +287,7 @@ EOT;
 		}		
 		
 		try{	
-			$soap_client = new SoapClient(dirname(__FILE__).'/openotp.wsdl', $options);
+			$soap_client = new SoapClientTimeout(dirname(__FILE__).'/openotp.wsdl', $options);
 		}catch(exception $e){
 			\OCP\Util::writeLog('user_rcdevs', __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
 			return false;
@@ -294,6 +295,10 @@ EOT;
 		/*if (!$soap_client) {
 			return false;
 		}*/
+			
+		$soap_client->setTimeout(30);
+		$soap_client->setVersion(2);
+		
 		$this->soap_client = $soap_client;	
 		return true;
 	}
@@ -331,6 +336,43 @@ EOT;
 		}
 		return $resp;
 	}
+}
+
+
+class SoapClientTimeout extends SoapClient {
+    private $timeout;
+    private $version;
+
+    public function setTimeout ($timeout) {
+        $this->timeout = $timeout;
+    }
+    public function setVersion ($version) {
+        $this->version = $version;
+    }
+
+    public function __doRequest($request, $location, $action, $version, $one_way=false) {
+        if (!$this->timeout) {
+            // Call via parent because we require no timeout
+            $response = parent::__doRequest($request, $location, $action, $version, $one_way);
+        } else {
+            // Call via Curl and use the timeout
+            $curl = curl_init($location);
+
+            curl_setopt($curl, CURLOPT_VERBOSE, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "API-Version: ".strval($this->version)));
+            curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
+
+            $response = curl_exec($curl);
+            if (curl_errno($curl)) throw new Exception(curl_error($curl));
+            curl_close($curl);
+        }
+
+        if (!$one_way) return ($response);
+    }
 }
 
 ?>
