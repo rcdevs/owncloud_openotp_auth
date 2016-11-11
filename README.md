@@ -1,6 +1,6 @@
 # Rcdevs Openotp
 
-RCDevs OpenOTP Plugin for OwnCloud version 1.1.0
+RCDevs OpenOTP Plugin for OwnCloud version 1.1.1
 Copyright (c) 2010-2016 RCDevs SA, All rights reserved.
 
 This program is free software; you can redistribute it and/or
@@ -58,8 +58,8 @@ https://www.rcdevs.com/downloads/index.php?id=VMWare+Appliances
 
 **********   INSTALLATION   **********
 
-Require Owncloud >= 9 
-Version 1.1.0
+Require Owncloud 9.0.x 
+Version 1.1
 
 1)	If your PHP installation does not have the soap extension, install the php-soap 
 	package for your Linux distribution. With RedHat, do it with 'yum install php-soap'.
@@ -80,8 +80,6 @@ Version 1.1.0
 	!! IMPORTANT !! We recommand to disable Two-Factor on remote until feature will be fully 
 	supported in next update.
 -	Allow users to administer Two-factor on their profile settings page or not
--	At first Login, owncloud displays a popup with a Random Generated Password to use for remote connection.
-	If users don't keep safely the code on first login, they will be able to do it in "Personal" area on nexts logins.
 -	During configuration of your plugin:
 		-> Select "Two-Factor OR Standard authentication (Enable OpenOTP or Owncloud 
 		Password)", even if you are not able to connect, Owncloud password remains active.
@@ -98,8 +96,17 @@ Version 1.1.0
 
 
 **********   CHANGELOG  **********
-1.1.0
-	- Application is compatible with OwnCloud Version 9.0.1
+1.1.1
+	Added support to OpenOTP Software Token with Push Notif Authentication
+	Extend php soapclient to add timeout capabilities
+	WebService API is now versioned
+	U2F javascript scripts updated
+	OTP Challenge input doesn't show anymore characters in clear text (type=password)   
+1.1
+    Application compatible with owncloud 9.0.1	
+1.0.1
+	Enhanced remote Password
+	Add FidoU2F.js library to avoid to installation of the U2F plugin in Google Chrome 
 1.0.0
-    - Initial public release.
+     Initial public release.
  

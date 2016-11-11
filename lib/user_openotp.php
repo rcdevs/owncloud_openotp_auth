@@ -163,7 +163,9 @@ class OC_USER_OPENOTP extends \OC_User_Backend{
 		){
 			\OCP\Util::writeLog('OC_USER_OPENOTP', '********* New Standard Authentication *********', \OCP\Util::INFO);
 			return $userDB->checkPassword($uid, $password);
+		
 		}else{
+			
 			\OCP\Util::writeLog('OC_USER_OPENOTP', '********* New OpenOTP Authentication *********', \OCP\Util::INFO);
 			// get App Configs
 			$_openotp_configs = \OPENOTP_CONFIG::$_openotp_configs;
@@ -177,6 +179,7 @@ class OC_USER_OPENOTP extends \OC_User_Backend{
 			$appPath = \OC_App::getAppPath('user_rcdevsopenotp');
 			// Force LDAP if Force local password on remote is unchecked
 			if ( $is_remote === true ) $params['rcdevsopenotp_user_settings'] = "openOTP.loginMode=LDAP";
+			#if ( $is_remote === true ) $params['rcdevsopenotp_user_settings'] = "openOTP.ChallengeMode=No";
 			$openotpAuth = new \openotpAuth($params, $appPath);
 			
 			// check OpenOTP WSDL file
@@ -263,7 +266,14 @@ class OC_USER_OPENOTP extends \OC_User_Backend{
 
 					$src = \OCP\Util::linkToRoute('openotpoverlay');
 					\OCP\Util::addHeader('script', array('type' => 'text/javascript', 'src' => $src), "");
-
+					
+					
+					// =============
+					// = Backtrace =
+					// =============
+					#$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 15);
+					#echo "<pre>"; print_r ($backtrace); echo "</pre>";die;
+										
 					//\OCP\Util::addScript('chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/u2f-api.js');
 					//header('Content-Security-Policy: script-src  \'self\' \'unsafe-eval\' \'unsafe-inline\' chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/u2f-api.js');
 					/*\OCP\Util::addHeader('script', array('type' => 'text/javascript'), $script);*/

@@ -57,7 +57,7 @@ class OC_USER_OPENOTP_Hooks {
 				\OCP\Util::writeLog('OC_USER_OPENOTP','Cannot create user with username '.$uid.' - Autocreate setting is disabled in admin panel', \OCP\Util::INFO);
 			}
         }else{
-        	\OCP\Util::writeLog('OC_USER_OPENOTP','User already exists with username '.$uid, \OCP\Util::DEBUG);
+        	\OCP\Util::writeLog('OC_USER_OPENOTP', 'Found user '.$uid . ' - Loading profile with OpenOTP Backend', \OCP\Util::INFO);
         }
 
 		return false;
