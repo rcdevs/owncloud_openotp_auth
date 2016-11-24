@@ -100,6 +100,11 @@ Version 1.1
 
 
 **********   CHANGELOG  **********
+1.1.1-1
+	Added Contextual authentication
+	  change the LoginMode to LDAP-only for requests comming 
+	  from trusted devices on trusted IPs.
+	New openotp.wsdl file including context parameter
 1.1.1
 	Added support to OpenOTP Software Token with Push Notif Authentication
 	Extend php soapclient to add timeout capabilities
