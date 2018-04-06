@@ -1,24 +1,26 @@
 <?xml version="1.0"?>
 <info>
-    <id>user_rcdevsopenotp</id>
-    <name>Rcdevs Openotp</name>
-    <description>RCDevs OpenOTP Application enable two-factor authentication for your users. It is versatile, device-independent and based on opened security standards. OpenOTP provides fine-grained user identity and access management (IAM), one-time passwords authentication technologies (OTP) and extensive authentication policies for your AD / LDAP users. It is enterprise-ready with strong support for high-availability, load-balancing, multi-tenancy, cloud-readiness, geolocalization, delegated administration and much more.</description>
-    <licence>AGPL</licence>
-    <author>Julien RICHARD</author>
-    <version>1.1.1</version>
-    <namespace>User_RcdevsOpenotp</namespace>
-    <category>other</category>
-	<website>http://www.rcdevs.com/products/openotp/</website>	
-	<requiremin>8.0</requiremin>
+	<id>twofactor_rcdevsopenotp</id>
+	<name>OpenOTP Two Factor Authentication</name>
+    <description>RCDevs OpenOTP Application enable two-factor authentication for your users using your personnal Cloud. It is versatile, device-independent and based on opened security standards. OpenOTP provides fine-grained user identity and access management (IAM), one-time passwords authentication technologies (OTP) and extensive authentication policies for your AD / LDAP users. It is enterprise-ready with strong support for high-availability, load-balancing, multi-tenancy, cloud-readiness, geolocalization, delegated administration and much more.</description>
+	<licence>AGPL</licence>
+    <author>RCDevs (Julien RICHARD)</author>
+	<version>1.2</version>
+	<namespace>TwoFactor_RCDevsOpenOTP</namespace>
+	<category>Security</category>
+	<ocsid>174704</ocsid>
+	<types>
+		<prelogin/>
+		<authentication/>
+	</types>
+	<two-factor-providers>
+		<provider>OCA\TwoFactor_RCDevsOpenOTP\Provider\TwoFactorRCDevsOpenOTPProvider</provider>
+	</two-factor-providers>
+    <screenshot>https://www.rcdevs.com/wp-content/uploads/owncloud_overlay.jpg</screenshot>
     <dependencies>
-		<php min-version="5.4"/>
+		<php min-version="5.5"/>
         <lib>soap</lib>
         <lib>ldap</lib>
-        <owncloud min-version="8.0"/>
-        <owncloud min-version="8.0" max-version="8.2"/>
-    </dependencies>
-	<types>
-        <prelogin/>
-        <authentication/>
-	</types>
+        <owncloud min-version="9.1" max-version="10.0"/>
+    </dependencies>	
 </info>

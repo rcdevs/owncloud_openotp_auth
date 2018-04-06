@@ -1,10 +1,10 @@
 <?php
 /**
- * ownCloud - RCDevs OpenOTP Two-factor Authentication
+ * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package user_rcdevsopenotp
+ * @package twofactor_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2016 RCDEVS info@rcdevs.com
+ * @copyright 2018 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@
  *
  */
 
-script('user_rcdevsopenotp', 'script');
+script('twofactor_rcdevsopenotp', 'script');
 ?>
 <div id="openotp_general_settings" class="section">
 	<form id="openotp_settings" method="POST" action="">
@@ -33,10 +33,6 @@ script('user_rcdevsopenotp', 'script');
 			<?php p($l->t('Enter your OpenOTP server settings in the fields below.')); ?> 
 			<?php p($l->t('You can also enable or disable Two-Factor Authentication by editing the personnal settings on the Users page.')); ?> 
 		</p>
-			<?php if(OCP\App::isEnabled('user_webdavauth') || OCP\App::isEnabled('user_ldap')) {
-				print_unescaped('<p style="color:red; padding-bottom:10px;">'.$l->t('<b>Warning:</b> Apps user_ldap and/or user_webdavauth are incompatible with RCDevs OpenOTP Two-factor Authentication. Please ask your system administrator to disable one of them. OpenOTP Server already stores users in LDAP backends (AD, OpenLDAP, Novell etc..), you have to configure WebADM / OpenOTP with your current Directory or use the build-in OpenLDAP supplied with the product.').'</p>');
-			} ?>		
-
 		<?php foreach( $_['openotp_allconfig'] as $openotp_config  ):?>
 		<p style="position:relative;" class="p_<?php p($openotp_config['type']); ?>">
 			<?php switch( $openotp_config['type'] ){ 
@@ -45,7 +41,7 @@ script('user_rcdevsopenotp', 'script');
 			<input type="text" id="<?php p($openotp_config['name']); ?>" name="<?php p($openotp_config['name']); ?>" value="<?php p($_[$openotp_config['name']]); ?>"
 			       title="<?php p($l->t($openotp_config['title']));?>">
 			<?php if( $openotp_config['name'] == "rcdevsopenotp_server_url" ){ ?>
-			<input type="button" id="check_server_url" name="check_server_url" value="Test"/><img id="check_server_loading" src="<?php p(\OCP\Util::imagePath('user_rcdevsopenotp', 'ajax-loader.gif'));?>"/><span style="display:none; padding:6px 15px;" id="message_status"></span><span style="float:right; padding:5px; display:none;" id="message_check_server_url"></span>
+			<input type="button" id="check_server_url" name="check_server_url" value="Test"/><img id="check_server_loading" src="<?php p(\OCP\Util::imagePath('twofactor_rcdevsopenotp', 'ajax-loader.gif'));?>"/><span style="display:none; padding:6px 15px;" id="message_status"></span><span style="float:right; padding:5px; display:none;" id="message_check_server_url"></span>
 			<?php } ?>
 			<?php 	break;
 					case "checkbox": 
@@ -58,7 +54,7 @@ script('user_rcdevsopenotp', 'script');
 			<div style="display:inline-block;">
 			<?php foreach($openotp_config['radios'] as $name => $radio): ?>	
 					<input type="radio" value="<?php p($radio['value']); ?>" name="<?php p($openotp_config['name']); ?>" id="<?php p($name); ?>" 
-						<?php if (!$_[$openotp_config['name']] && $radio['checked'] ) p(' checked="checked"');
+						<?php if (!$_[$openotp_config['name']] && (isset($radio['checked']) && $radio['checked'] != NULL) ) p(' checked="checked"');
 					  		elseif ($_[$openotp_config['name']] === $radio['value']) p(' checked="checked"'); ?>>
 					<label class="for_radio" for="<?php p($name); ?>"><?php p($l->t($radio['label']));?></label><br/>
 			<?php endforeach; ?>	

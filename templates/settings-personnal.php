@@ -1,10 +1,10 @@
 <?php
 /**
- * ownCloud - RCDevs OpenOTP Two-factor Authentication
+ * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package user_rcdevsopenotp
+ * @package twofactor_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2016 RCDEVS info@rcdevs.com
+ * @copyright 2018 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,18 +23,17 @@
  *
  */
 
-script('user_rcdevsopenotp', 'script');
-$allow_user_administer_openotp = OCP\Config::getAppValue('user_rcdevsopenotp','rcdevsopenotp_allow_user_administer_openotp');
+script('twofactor_rcdevsopenotp', 'script');
+$allow_user_administer_openotp = OCP\Config::getAppValue('twofactor_rcdevsopenotp','rcdevsopenotp_allow_user_administer_openotp');
 ?>
 
 <div id="openotp_personnal_settings" class="section">
 	<form id="openotp_psettings" method="POST" action="">
 		<h2><?php p($l->t('OpenOTP Two-Factor Authentication'));?></h2>
-
 		<p>
 			<label style="padding-right:10px;" for="enable_openotp"><?php p($l->t("Enable OpenOTP Two-Factor Authentication."));?></label>	
-			<input id="enable_openotp_yes" name="enable_openotp" type="radio" value="yes" <?php if ( $_['enable_openotp'] === "yes" || !isset($_['enable_openotp']) ): ?> checked="checked"<?php endif; ?> <?php if ( $allow_user_administer_openotp !== "on" ): ?> disabled="disabled"<?php endif; ?> /> <label for="enable_openotp_yes"> Yes</label>
-			<input id="enable_openotp_no" name="enable_openotp" type="radio" value="no" <?php if ($_['enable_openotp'] === "no"): ?> checked="checked"<?php endif; ?>  <?php if ( $allow_user_administer_openotp !== "on" ): ?> disabled="disabled"<?php endif; ?>/> <label for="enable_openotp_no"> No</label>
+			<input id="enable_openotp_yes" name="enable_openotp" type="radio" value="yes" <?php if ( $_['enable_openotp'] === "yes"  ): ?> checked="checked"<?php endif; ?> <?php if ( $allow_user_administer_openotp !== "on" ): ?> disabled="disabled"<?php endif; ?> /> <label for="enable_openotp_yes"> Yes</label>
+			<input id="enable_openotp_no" name="enable_openotp" type="radio" value="no" <?php if ($_['enable_openotp'] === "no" || !isset($_['enable_openotp'])): ?> checked="checked"<?php endif; ?>  <?php if ( $allow_user_administer_openotp !== "on" ): ?> disabled="disabled"<?php endif; ?>/> <label for="enable_openotp_no"> No</label>
 		</p>		
 		<input type="hidden" name="openotp_psettings_sent" value="1" />
 	</form>

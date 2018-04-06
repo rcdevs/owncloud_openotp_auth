@@ -1,10 +1,10 @@
 <?php
 /**
- * ownCloud - RCDevs OpenOTP Two-factor Authentication
+ * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package user_rcdevsopenotp
+ * @package twofactor_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2016 RCDEVS info@rcdevs.com
+ * @copyright 2018 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,12 +22,11 @@
  * @license http://opensource.org/licenses/AGPL-3.0 GNU AFFERO GENERAL PUBLIC LICENSE
  *
  */
-
-$_openotp_persotmpl = new OCP\Template('user_rcdevsopenotp', 'personnalsettings');
+$_openotp_persotmpl = new OCP\Template('twofactor_rcdevsopenotp', 'settings-personnal');
 
 $_openotp_persotmpl->assign(
     "enable_openotp",
-    OCP\Config::getUserValue( OCP\USER::getUser(), 'user_rcdevsopenotp', 'enable_openotp')
+    OCP\Config::getUserValue( OCP\USER::getUser(), 'twofactor_rcdevsopenotp', 'enable_openotp')
 );	
 
 return $_openotp_persotmpl->fetchPage();

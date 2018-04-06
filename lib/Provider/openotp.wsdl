@@ -102,8 +102,7 @@
       <output><soap:body use="literal" namespace="urn:openotp" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
    </operation>
    <operation name="openotpLogin">
-      <!-- Operation openotpLogin is an alias of openotpNormalLogin.
-           It is kept for backward compatibility with OpenOTP v1.0. -->
+      <!-- Operation openotpLogin is an alias of openotpNormalLogin. It is kept for backward compatibility with OpenOTP v1.0. -->
       <soap:operation soapAction="openotpLogin"/>
       <input><soap:body use="literal" namespace="urn:openotp" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
       <output><soap:body use="literal" namespace="urn:openotp" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>

@@ -1,10 +1,10 @@
 <?php
 /**
- * ownCloud - RCDevs OpenOTP Two-factor Authentication
+ * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package user_rcdevsopenotp
+ * @package twofactor_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2016 RCDEVS info@rcdevs.com
+ * @copyright 2018 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,13 +23,14 @@
  *
  */
 
-
 /**
  * OpenOTP authentication Config
- * @package user_rcdevsopenotp
+ * @package twofactor_rcdevsopenotp
  */
-class OPENOTP_CONFIG{
-	
+namespace OCA\TwoFactor_RCDevsOpenOTP\Settings;
+
+class OpenotpConfig
+{
 	static public $_openotp_configs = array( "server_url" => 
 				array(	'name'	=>	'rcdevsopenotp_server_url',
 						'label'	=> 'OpenOTP server URL',
@@ -86,26 +87,12 @@ class OPENOTP_CONFIG{
 						'default_value'	=> '',
 						'title'	=>	'Proxy Password'
 					),			
-				"disable_openotp_on_remote" => 															
-				array(	'name'	=>	'rcdevsopenotp_disable_openotp_on_remote',
-						'label'	=> 'Force Remote Password on Desktop/Mobile Apps authentication. If unchecked, an LDAP only authentication request is sent to OTP server (User settings "openOTP.loginMode=LDAP" overwrites User settings configuration)',
-						'type'	=> 'checkbox',
-						'default_value'	=> 'on',
-						'title'	=>	'Disable OTP on remote (webdav/Mobile Apps and sync)'
-					),
 				"allow_user_administer_openotp" => 															
 				array(	'name'	=>	'rcdevsopenotp_allow_user_administer_openotp',
 						'label'	=> 'Allow users to administer Two-factor on their profile settings page',
 						'type'	=> 'checkbox',
 						'default_value'	=> 'on',
 						'title'	=>	'Disable OTP on remote (webdav/Mobile Apps and sync)'
-					),
-				"autocreate_users" =>
-				array(	'name'	=>	'rcdevsopenotp_autocreate_user',
-						'label'	=> 'Autocreate user on first login - Random password generated, displayname equals login name. If this option is disabled and the user does not exist, then the user will be not allowed to log in ownCloud.',
-						'type'	=> 'checkbox',
-						'default_value'	=> 'on',
-						'title'	=>	'Autocreate user'
 					),											
 				"authentication_method" => 															
 				array(	'name'	=>	'rcdevsopenotp_authentication_method',
@@ -117,12 +104,8 @@ class OPENOTP_CONFIG{
 						 														'checked' => '1',	
 																				'title'	=>	'User login with Owncloud password - OpenOTP'	
 																				),
-										   'authentication_method_std_otp' => array('label' => 'Two-Factor OR Standard authentication (Enable OpenOTP or Owncloud Password)',
-						 														'value' => '1',		
-																				'title'	=>	'User can use either OpenOTP OTP or Owncloud password, use this when configuring application'	
-																				),	
  										   'authentication_method_otp' => array('label' => 'Two-Factor authentication (Enable OpenOTP for all user)',
- 						 														'value' => '2',		
+ 						 														'value' => '1',		
  																				'title'	=>	'User login with OpenOTP password'	
  																				)
 										)																																								

@@ -1,10 +1,10 @@
 <?php
 /**
- * ownCloud - RCDevs OpenOTP Two-factor Authentication
+ * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package user_rcdevsopenotp
+ * @package twofactor_rcdevsopenotp
  * @author Julien RICHARD
- * @copyright 2016 RCDEVS info@rcdevs.com
+ * @copyright 2018 RCDEVS info@rcdevs.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,26 +23,50 @@
  *
  */
 
+namespace OCA\TwoFactor_RCDevsOpenOTP\AuthService;
 
-class openotpAuth { 
+use OCP\AppFramework\App;
+use OCP\ILogger;
+use Exception;
 
-	private $plugin;
+class OpenotpAuthException extends Exception
+{
+}
+
+class OpenotpAuth{ 
+
+	/** @var home */
 	private $home;
-	private $openotp_auth;
+	/** @var server_url */
 	private $server_url;
+	/** @var client_id */
 	private $client_id;
+	/** @var default_domain */
 	private $default_domain;
+	/** @var user_settings */
 	private $user_settings;                                                                           
+	/** @var proxy_host */
 	private $proxy_host;                                                                              
+	/** @var proxy_port */
 	private $proxy_port;                                                                              
+	/** @var proxy_username */
 	private $proxy_username;
+	/** @var proxy_password */
 	private $proxy_password;
+	/** SoapClientTimeout object */
 	private $soap_client;
+	/** Logger object */
+    private $logger;
 
-	public function __construct( $params, $home='' ){
+    /**
+	 * @param ILogger $logger
+	 * @param Array $params
+	 * @param String $home
+	 */
+	public function __construct(ILogger $logger, $params, $home='' ){
 
 	    $this->home = $home;
-
+		$this->logger = $logger;
 		// load config		
 		$this->server_url = $params['rcdevsopenotp_server_url'];
 		$this->client_id = $params['rcdevsopenotp_client_id'];
@@ -117,7 +141,9 @@ class openotpAuth {
 		
 			var tokenform = document.getElementsByName("requesttoken")[0].value;
 			var timezone = document.getElementById("timezone").value;
-			var timezoneoffset = document.getElementById("timezone-offset").value;
+			var timezone_offset = document.getElementById("timezone_offset").value;
+			var remember_login = document.getElementById("remember_login").value;
+			var context = document.getElementsByName("context")[0].value;
 			var overlay = document.createElement("div");
 			overlay.id = 'openotp_overlay';
 			overlay.style.position = 'absolute'; 
@@ -149,8 +175,9 @@ class openotpAuth {
 			+ '<form style="margin-top:30px;" id="formlogin" name="login" method="POST">'
 			+ '<input type="hidden" name="requesttoken" value="'+tokenform+'">'
 			+ '<input type="hidden" id="timezone" name="timezone" value="'+timezone+'">'
-			+ '<input type="hidden" id="timezoneoffset" name="timezoneoffset" value="'+timezoneoffset+'">'
-			+ '<input type="hidden" id="remember_login" name="remember_login" value="0">'
+			+ '<input type="hidden" id="timezone_offset" name="timezone_offset" value="'+timezone_offset+'">'
+			+ '<input type="hidden" id="remember_login" name="remember_login" value="0" value="'+remember_login+'">'
+			+ '<input type="hidden" name="context" value="'+context+'">'
 			+ '<input type="hidden" name="openotp_state" value="$session">'
 			+ '<input type="hidden" name="openotp_domain" value="$domain">'
 			+ '<input type="hidden" name="user" value="$username">'
@@ -244,9 +271,9 @@ EOT;
 		});
 		
 EOT;
-
 		
-		if( $u2fChallenge ){ 			
+		if( $u2fChallenge ){ 
+			
 			$overlay .= " $(document).ready(function(){ " . "\r\n";
 			$overlay .= "if (/chrome|chromium|firefox|opera/.test(navigator.userAgent.toLowerCase())) {
 			    var u2f_request = ".$u2fChallenge.";
@@ -256,7 +283,7 @@ EOT;
 			    }
 			    u2f.sign(u2f_request.appId, u2f_request.challenge, u2f_regkeys, function(response) {
 					document.getElementsByName('openotp_u2f')[0].value = JSON.stringify(response); 
-					document.getElementById('formlogin').submit();
+					document.getElementById('formlogin').submit();					
 			    }, $timeout ); }" . "\r\n";
 			$overlay .= " else { 
 				var u2f_activate = document.getElementById('u2f_activate'); 
@@ -289,65 +316,69 @@ EOT;
 		try{	
 			$soap_client = new SoapClientTimeout(dirname(__FILE__).'/openotp.wsdl', $options);
 		}catch(exception $e){
-			\OCP\Util::writeLog('user_rcdevs', __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
-			return false;
+			$message = __METHOD__.', exception: '.$e->getMessage();
+			//$this->logger->error($message, array('app' => 'rcdevsopenotp'));
+			throw new OpenotpAuthException($message);
 		}
-		/*if (!$soap_client) {
-			return false;
-		}*/
-			
-		$soap_client->setTimeout(30);
+
+		$soap_client->setTimeout(30);	
 		$soap_client->setVersion(2);
+		$soap_client->setLogger($this->logger);
 		
 		$this->soap_client = $soap_client;	
 		return true;
 	}
 		
-	public function openOTPSimpleLogin($username, $domain, $password, $context){
-		if (!$this->soapRequest()) return false;
+	public function openOTPSimpleLogin($username, $domain, $password, $option, $context){
 		try{
-			$resp = $this->soap_client->openotpSimpleLogin($username, $domain, $password, $this->client_id, $this->remote_addr, $this->user_settings, NULL, $context );
+			$this->soapRequest();
+			$resp = $this->soap_client->openotpSimpleLogin($username, $domain, $password, $this->client_id, $this->remote_addr, $this->user_settings, $option, $context );
 		}catch(exception $e){
-			\OCP\Util::writeLog('user_rcdevsopenotp', __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
-			return false;
+			$message = __METHOD__.', exception: '.$e->getMessage();
+			$this->logger->error($message, array('app' => 'rcdevsopenotp'));
 		}
-		
-		return $resp;
+		return isset($resp) ? $resp : false;
 	}
 	
 	public function openOTPChallenge($username, $domain, $state, $password, $u2f){
-		if (!$this->soapRequest()) return false;
 		try{
+			$this->soapRequest();
 			$resp = $this->soap_client->openotpChallenge($username, $domain, $state, $password, $u2f);
 		}catch(exception $e){
-			\OCP\Util::writeLog('user_rcdevsopenotp', __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
-			return false;
+			$message = __METHOD__.', exception: '.$e->getMessage();
+			$this->logger->error($message, array('app' => 'rcdevsopenotp'));
 		}
-		return $resp;
+		return isset($resp) ? $resp : false;
 	}
 	
 	public function openOTPStatus(){
-		if (!$this->soapRequest()) return false;
 		try{
+			$this->soapRequest();
 			$resp = $this->soap_client->openotpStatus();
 		}catch(exception $e){
-			\OCP\Util::writeLog('user_rcdevsopenotp', __METHOD__.', exception: '.$e->getMessage(), \OCP\Util::ERROR);
-			return false;
+			$message = __METHOD__.', exception: '.$e->getMessage();
+			$this->logger->error($message, array('app' => 'rcdevsopenotp'));
+			throw new OpenotpAuthException($message);
 		}
 		return $resp;
 	}
 }
 
 
-class SoapClientTimeout extends SoapClient {
+
+class SoapClientTimeout extends \SoapClient {
     private $timeout;
     private $version;
+    private $logger;
 
     public function setTimeout ($timeout) {
         $this->timeout = $timeout;
     }
     public function setVersion ($version) {
         $this->version = $version;
+    }
+    public function setLogger ($logger) {
+        $this->logger = $logger;
     }
 
     public function __doRequest($request, $location, $action, $version, $one_way=false) {
@@ -356,8 +387,12 @@ class SoapClientTimeout extends SoapClient {
             $response = parent::__doRequest($request, $location, $action, $version, $one_way);
         } else {
             // Call via Curl and use the timeout
-            $curl = curl_init($location);
-
+            $curl = curl_init(trim($location));
+			
+			
+			$this->logger->debug("*************  Location  **********" . trim($location), array('app' => 'rcdevsopenotp'));
+			$this->logger->debug("*************  Request  **********" . $request, array('app' => 'rcdevsopenotp'));
+			
             curl_setopt($curl, CURLOPT_VERBOSE, false);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_POST, true);
@@ -375,4 +410,3 @@ class SoapClientTimeout extends SoapClient {
     }
 }
 
-?>
