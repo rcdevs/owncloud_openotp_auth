@@ -52,7 +52,7 @@ Authenticator - Mobile-OTP (mOTP) Software Tokens - SMS One-Time Passwords
 - Mail / Secure Mail One-Time Passwords - Yubikey
 Visit https://www.rcdevs.com/products/openotp/
 Follow the quick start guide:
-https://www.rcdevs.com/downloads/documents.php?id=OpenOTP+Authentication+Server%0A
+http://docs.rcdevs/howtos/openotp_quick_start/openotp_quick_start/
 or download our appliances:
 https://www.rcdevs.com/downloads/index.php?id=VMWare+Appliances
 
