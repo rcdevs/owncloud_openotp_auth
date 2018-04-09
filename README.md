@@ -100,6 +100,7 @@ Version 1.1
 
 
 **********   CHANGELOG  **********
+
 1.1.1-1
 	Added Contextual authentication
 	  change the LoginMode to LDAP-only for requests comming 
