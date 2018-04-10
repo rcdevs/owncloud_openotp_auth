@@ -19,7 +19,7 @@
     <summary>RCDevs OpenOTP Application enables Multi-Factor authentication for your users.</summary>
 	<licence>AGPL</licence>
     <author>RCDevs (Julien RICHARD)</author>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<namespace>TwoFactor_RCDevsOpenOTP</namespace>
 	<category>Security</category>
 	<ocsid>174704</ocsid>
