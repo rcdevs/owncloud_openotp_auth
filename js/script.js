@@ -91,7 +91,7 @@ function check_server_url() {
 			if( response.openotpStatus === false){ 
 				$('#message_status').removeClass('success').addClass('error').fadeIn('fast');
 				$('#message_check_server_url').fadeOut('fast');
-				console.log( response.message );				
+				console.log( response.message );
 			}else{
         		$('#message_status').removeClass('error').addClass('success').fadeIn('fast');
         		$('#message_check_server_url').removeClass('error').html(response.message).fadeIn('fast');

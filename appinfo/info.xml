@@ -2,7 +2,8 @@
 <info>
 	<id>twofactor_rcdevsopenotp</id>
 	<name>OpenOTP Two Factor Authentication</name>
-    <description>RCDevs OpenOTP Application enable two-factor authentication for your users using your personnal Cloud. It is versatile, device-independent and based on opened security standards. OpenOTP provides fine-grained user identity and access management (IAM), one-time passwords authentication technologies (OTP) and extensive authentication policies for your AD / LDAP users. It is enterprise-ready with strong support for high-availability, load-balancing, multi-tenancy, cloud-readiness, geolocalization, delegated administration and much more.</description>
+    <description>RCDevs OpenOTP Application enables two-factor authentication for your users using your personnal Cloud. It is versatile, device-independent and based on opened security standards. OpenOTP provides fine-grained user identity and access management (IAM), one-time passwords authentication technologies (OTP) and extensive authentication policies for your AD / LDAP users. It is enterprise-ready with strong support for high-availability, load-balancing, multi-tenancy, cloud-readiness, geolocalization, delegated administration and much more.</description>
+    <summary>RCDevs OpenOTP Application enables Multi-Factor authentication for your users.</summary>
 	<licence>AGPL</licence>
     <author>RCDevs (Julien RICHARD)</author>
 	<version>1.2</version>
@@ -13,6 +14,13 @@
 		<prelogin/>
 		<authentication/>
 	</types>
+    <documentation>
+          <user>https://doc.owncloud.org/server/latest/user_manual/pim/contacts.html</user>
+          <admin>https://github.com/rcdevs/openotp_authentication_owncloud/blob/owncloud-v10/README.md</admin>
+    </documentation>
+    <website>https://rcdevs.com</website>
+    <bugs>https://github.com/rcdevs/openotp_authentication_owncloud/issues</bugs>
+    <repository type="git">https://github.com/rcdevs/openotp_authentication_owncloud/tree/owncloud-v10</repository>
 	<two-factor-providers>
 		<provider>OCA\TwoFactor_RCDevsOpenOTP\Provider\TwoFactorRCDevsOpenOTPProvider</provider>
 	</two-factor-providers>

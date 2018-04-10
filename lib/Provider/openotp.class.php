@@ -360,6 +360,7 @@ EOT;
 			$this->logger->error($message, array('app' => 'rcdevsopenotp'));
 			throw new OpenotpAuthException($message);
 		}
+
 		return $resp;
 	}
 }

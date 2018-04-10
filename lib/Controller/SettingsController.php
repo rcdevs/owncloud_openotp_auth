@@ -167,5 +167,6 @@ class SettingsController extends Controller {
 			$this->logger->error("Could not connect to host", array('app' => 'twofactor_rcdevsopenotp'));
 			return new DataResponse(['status' => "error", 'message' => 'Could not connect to host' ]);
 		}
+	}
 }
 

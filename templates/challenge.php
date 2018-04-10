@@ -28,10 +28,12 @@ if(is_array($_['challenge_params'])) extract($_['challenge_params']);
 <style>
 html #body-login form { margin:0 auto 10px auto; }
 html #body-login .warning{ padding:15px; }
+html #body-login .warning.rcdevsopenotp{ position:relative; }
 html #body-login .warning.rcdevsopenotp form{ width:100%; }
 html #body-login .warning.rcdevsopenotp form input[type="password"]{ min-width:100%; width:100%; margin:10px 0; padding:5px; }
 html #openotp_submit, html #openotp_retry{ min-width:100%; width:100%; margin:0; }
 #actions, #retry{ text-align:center; }
+#div_orange{ height:4px; width:100%; margin:0 -7px 0 -4px; position:absolute; top:0; left:4px; background-color:white; opacity: 0.3; filter: alpha(opacity=30); }
 </style>
 
 <?php if ($_['error_msg']){ ?>
@@ -46,6 +48,7 @@ html #openotp_submit, html #openotp_retry{ min-width:100%; width:100%; margin:0;
 
 
 <fieldset class="warning rcdevsopenotp">
+	<div id="div_orange"></div>
 	<form method="POST" id="OpenOTPLoginForm" name="LoginForm">
 	
 	<?php if($_['status'] && $_['status'] == "pushSuccess") { ?>
@@ -130,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				if(response.errorCode){
 					$('#retry').html('<input type="button" id="openotp_retry" class="button" title="" value="Retry" />');
 					//$('#OpenOTPLoginForm').append('<input type="button" id="openotp_retry" class="login primary icon-confirm-white" title="" value="Retry" />');
-					$('#u2f_display').html("<b style=\"color:red;\">A problem occurs, please verify your configuration:</b><br/><ul><li>- FIDO client communication with the public AppID URL requires SSL. </li><li>- Onwcloud App URL (U2F facets) MUST be under the same DNS domain suffix as the AppID URL (configured in RCDevs MFA Server - WebADM WebPortal)</li><li>- Fido U2F login Method is only available for Chrome, Opera. Firefox and Windows 10 are coming soon.</li></ul><br/><a style=\"text-decoration:underline;\" target=\"_blank\" href=\"https://www.rcdevs.com/docs/howtos/openotp_u2f/openotp_u2f/\">Read more on RCDevs Docs site</a><br/><br/>");
+					if(response.errorCode != 5) $('#u2f_display').html("<b style=\"color:red;\">A problem occurs, please verify your configuration:</b><br/><ul><li>- FIDO client communication with the public AppID URL requires SSL. </li><li>- Onwcloud App URL (U2F facets) MUST be under the same DNS domain suffix as the AppID URL (configured in RCDevs MFA Server - WebADM WebPortal)</li><li>- Fido U2F login Method is only available for Chrome, Firefox and Opera. Internet Explorer and other Web browser are coming soon.</li></ul><br/><a style=\"text-decoration:underline;\" target=\"_blank\" href=\"https://www.rcdevs.com/docs/howtos/openotp_u2f/openotp_u2f/\">Read more on RCDevs Docs site</a><br/><br/>");
 					console.log("OpenOTP Fido U2F signature Log #Code:" + response.errorCode);
 				}else{ document.getElementsByName('openotp_u2f')[0].value = JSON.stringify(response); 
 					document.getElementsByName('challenge')[0].value = "dummy"; 
@@ -148,12 +151,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	var c = <?php p($rcdevsopenotp_timeout); ?>;
 	var base = <?php p($rcdevsopenotp_timeout); ?>;
+	var static_width = "";
 	function count()
 	{
 		plural = c <= 1 ? "" : "s";
 		$("#timeout").html(c + " second" + plural);
-		var div_width = 300;
-		var new_width =  Math.round(c*div_width/base);
+		var div_width = $('#div_orange').width();
+		if(!static_width) static_width = div_width;
+		var new_width =  Math.round(c*static_width/base);
 		$('#div_orange').css('width',new_width+'px');
 
 		if(c == 0 || c < 0) {
