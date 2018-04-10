@@ -1,4 +1,4 @@
-1.2
+1.2.0
 	- Add compatibility to Owncloud v10 (10.0.4-10.0.7 tested)
 	- Errors replaced by exceptions
 1.1.1-1
