@@ -24,7 +24,9 @@
 	<two-factor-providers>
 		<provider>OCA\TwoFactor_RCDevsOpenOTP\Provider\TwoFactorRCDevsOpenOTPProvider</provider>
 	</two-factor-providers>
-    <screenshot>https://www.rcdevs.com/wp-content/uploads/owncloud_overlay.jpg</screenshot>
+    <screenshot>https://github.com/rcdevs/openotp_authentication_owncloud/blob/owncloud-v10/screenshots/loginscreen-by-otp.png</screenshot>
+    <screenshot>https://github.com/rcdevs/openotp_authentication_owncloud/blob/owncloud-v10/screenshots/loginscreen-by-u2f.png</screenshot>
+    <screenshot>https://github.com/rcdevs/openotp_authentication_owncloud/blob/owncloud-v10/screenshots/administration-settings.png</screenshot>
     <dependencies>
 		<php min-version="5.5"/>
         <lib>soap</lib>
