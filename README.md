@@ -1,6 +1,6 @@
 # Rcdevs Openotp
 
-RCDevs OpenOTP Plugin for Owncloud version 1.2.1
+RCDevs OpenOTP Plugin for Owncloud version 1.2.2
 Copyright (c) 2010-2018 RCDevs SA, All rights reserved.
 
 This program is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ https://www.rcdevs.com/downloads/index.php?id=VMWare+Appliances
 
 ### **********   INSTALLATION   **********
 Compatible Owncloud 10.x (Tested on 10.0.4/10.0.7)
-Version 1.2.1
+Version 1.2.2
 
 1.	If your PHP installation does not have the soap extension, install the php-soap 
 ..	package for your Linux distribution. With RedHat, do it with 'yum install php-soap'.
@@ -74,6 +74,9 @@ Version 1.2.1
 	LDAP plugin to create your local user with the uid/samaccountname, otherwise a random generated string is used for username when accounts 
 	are auto-created during import process. To do this, click on Expert tab, and fill in "Override UUID detection" with the correct login name
 	based on your LDAP directory (uid/samaccountname...)
+-	Contextual authentication: Change the LoginMode to LDAP-only for requests comming from trusted devices on trusted IPs.
+	One user device gets trusted for a specifc IP address after a successful two-factor authentication. 
+	Contextual Authentication need a persistant cookie after logout to work properly.	
 -	!! IMPORTANT !! keep an admin user working without otp in case of a problem. If not you can:
 
 		->  Switch authentication method to Standard (Owncloud password):
@@ -85,6 +88,9 @@ Version 1.2.1
 
 
 ### **********   CHANGELOG  **********
+1.2.2
+	- implement contextual authentication	
+	- app:check-code integrity
 1.2.1
 1.2.0
 	- Add compatibility to owncloud v10

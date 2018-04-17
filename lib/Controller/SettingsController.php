@@ -51,6 +51,7 @@ class SettingsController extends Controller {
     private $logger;
 	/** OpenOTP Config */
     private $openotpconfig;
+
 	
     /**
 	 * @param string $appName
@@ -111,7 +112,7 @@ class SettingsController extends Controller {
 				if($_openotp_config['type'] === "checkbox" && !isset( $POST[$_openotp_config['name']] ) )
 					$this->config->setAppValue('twofactor_rcdevsopenotp', $_openotp_config['name'], "off");
 				else{
-					if( isset($POST[$_openotp_config['name']]) && $POST[$_openotp_config['name']] == "" && isset($_openotp_config['default_value']) ){
+					if( isset($POST[$_openotp_config['name']]) && $POST[$_openotp_config['name']] === "" && isset($_openotp_config['default_value']) ){
 						$this->config->setAppValue( 'twofactor_rcdevsopenotp', $_openotp_config['name'], $_openotp_config['default_value'] );
 					}else{
 						//$this->logger->debug("setAppValue Name: " . $_openotp_config['name'], array('app' => 'rcdevsopenotp'));
@@ -152,7 +153,15 @@ class SettingsController extends Controller {
 		}
 		$params['rcdevsopenotp_remote_addr'] = $this->request->getRemoteAddress();
 		$params['rcdevsopenotp_server_url'] = stripslashes($server_url);
-		$appPath = \OC_App::getAppPath('twofactor_rcdevsopenotp');
+
+		 // OC >= 10.0.5
+		if (method_exists(\OC::$server->getAppManager(),'getAppPath')){
+			try {
+				$appPath = \OC::$server->getAppManager()->getAppPath('twofactor_rcdevsopenotp');
+			} catch (AppPathNotFoundException $e) {}	
+		 // OC <= 10.0.4	
+		 //TODO: OC_App - Static method of private class must not be called
+		}else $appPath = \OC_App::getAppPath('twofactor_rcdevsopenotp');
 		
 		$openotpAuth = new openotpAuth($this->logger, $params, $appPath);
 		try{

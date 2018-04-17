@@ -1,3 +1,6 @@
+1.2.2
+	- implement contextual authentication	
+	- app:check-code integrity
 1.2.1
 1.2.0
 	- Add compatibility to Owncloud v10 (10.0.4-10.0.7 tested)

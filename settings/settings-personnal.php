@@ -23,10 +23,12 @@
  *
  */
 $_openotp_persotmpl = new OCP\Template('twofactor_rcdevsopenotp', 'settings-personnal');
+$ocConfig = \OC::$server->getConfig();
+$user = \OC::$server->getUserSession()->getUser();
 
 $_openotp_persotmpl->assign(
     "enable_openotp",
-    OCP\Config::getUserValue( OCP\USER::getUser(), 'twofactor_rcdevsopenotp', 'enable_openotp')
+    $ocConfig->getUserValue( $user->getUID(), 'twofactor_rcdevsopenotp', 'enable_openotp')
 );	
 
 return $_openotp_persotmpl->fetchPage();

@@ -42,6 +42,7 @@ if(class_exists('\\OCP\\AppFramework\\Http\\EmptyContentSecurityPolicy')) {
 \OCP\Util::addScript('twofactor_rcdevsopenotp', 'script');
 \OCP\Util::addScript('twofactor_rcdevsopenotp', 'fidou2f');
 
+//TODO: OC_User - Static method of private class must not be called
 $isadmin = \OC_User::isAdminUser(\OC_User::getUser());
 if($isadmin){
 	\OC::$server->getNavigationManager()->add(function () {

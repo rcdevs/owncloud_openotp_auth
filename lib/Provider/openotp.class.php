@@ -57,6 +57,12 @@ class OpenotpAuth{
 	private $soap_client;
 	/** Logger object */
     private $logger;
+	/** @var context_name */
+	private $context_name = '__Host-OpenOTPContext';
+	/** @var context_size */
+	private $context_size = 32;
+	/** @var context_time */
+	private $context_time = 2500000;	
 
     /**
 	 * @param ILogger $logger
@@ -117,6 +123,19 @@ class OpenotpAuth{
 		}
 		return $ret;
 	}
+	
+	public function getContext_name()
+	{
+		return $this->context_name;
+	}
+	public function getContext_size()
+	{
+		return $this->context_size;
+	}	
+	public function getContext_time()
+	{
+		return $this->context_time;
+	}		
 	
 	public static function getOverlay($otpChallenge, $u2fChallenge, $message, $username, $session, $timeout, $ldappw, $path, $appWebPath, $domain=NULL){
 		$appWebPath .= "/images";
@@ -299,10 +318,10 @@ EOT;
 	private function soapRequest(){
 	
 		$options = array('location' => $this->server_url);
-		if ($this->proxy_host != NULL && $this->proxy_port != NULL) {
+		if ($this->proxy_host !== NULL && $this->proxy_port !== NULL) {
 			$options['proxy_host'] = $this->proxy_host;
 			$options['proxy_port'] = $this->proxy_port;
-			if ($this->proxy_username != NULL && $this->proxy_password != NULL) {
+			if ($this->proxy_username !== NULL && $this->proxy_password !== NULL) {
 				$options['proxy_login'] = $this->proxy_username;
 				$options['proxy_password'] = $this->proxy_password;
 			}
@@ -391,8 +410,8 @@ class SoapClientTimeout extends \SoapClient {
             $curl = curl_init(trim($location));
 			
 			
-			$this->logger->debug("*************  Location  **********" . trim($location), array('app' => 'rcdevsopenotp'));
-			$this->logger->debug("*************  Request  **********" . $request, array('app' => 'rcdevsopenotp'));
+			//$this->logger->debug("*************  Location  **********" . trim($location), array('app' => 'rcdevsopenotp'));
+			//$this->logger->debug("*************  Request  **********" . $request, array('app' => 'rcdevsopenotp'));
 			
             curl_setopt($curl, CURLOPT_VERBOSE, false);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

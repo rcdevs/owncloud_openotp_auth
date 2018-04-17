@@ -24,24 +24,19 @@
  */
 use OCA\TwoFactor_RCDevsOpenOTP\Settings\OpenotpConfig;
 
-\OC_Util::checkAdminUser();
 $_openotp_configs = OpenotpConfig::$_openotp_configs;
 $_openotp_admintmpl = new OCP\Template('twofactor_rcdevsopenotp', 'settings-admin');
 $_openotp_admintmpl->assign('openotp_allconfig', $_openotp_configs);
 
-// Deprecated: before ajax call
-/*if($_POST) {
-	// CSRF check
-	OCP\JSON::callCheck();
-}*/
+$ocConfig = \OC::$server->getConfig();
 
 foreach( $_openotp_configs as $_openotp_confname => $_openotp_config ){
     if ($_POST && isset($_POST[$_openotp_config['name']]) ) {        
-        OCP\Config::setAppValue('twofactor_rcdevsopenotp',$_openotp_config['name'],$_POST[$_openotp_config['name']]);
+        $ocConfig->setAppValue('twofactor_rcdevsopenotp',$_openotp_config['name'],$_POST[$_openotp_config['name']]);
     }
     $_openotp_admintmpl->assign(
         $_openotp_config['name'],
-        OCP\Config::getAppValue(
+        $ocConfig->getAppValue(
             'twofactor_rcdevsopenotp',$_openotp_config['name'],$_openotp_config['default_value']
         )
     );	

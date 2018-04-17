@@ -24,6 +24,7 @@
  */
 
 script('twofactor_rcdevsopenotp', 'script');
+$urlGenerator = \OC::$server->getURLGenerator();
 ?>
 <div id="openotp_general_settings" class="section">
 	<form id="openotp_settings" method="POST" action="">
@@ -40,8 +41,8 @@ script('twofactor_rcdevsopenotp', 'script');
 			<label class="for_text" for="<?php p($openotp_config['name']); ?>"><?php p($l->t($openotp_config['label']));?></label>
 			<input type="text" id="<?php p($openotp_config['name']); ?>" name="<?php p($openotp_config['name']); ?>" value="<?php p($_[$openotp_config['name']]); ?>"
 			       title="<?php p($l->t($openotp_config['title']));?>">
-			<?php if( $openotp_config['name'] == "rcdevsopenotp_server_url" ){ ?>
-			<input type="button" id="check_server_url" name="check_server_url" value="Test"/><img id="check_server_loading" src="<?php p(\OCP\Util::imagePath('twofactor_rcdevsopenotp', 'ajax-loader.gif'));?>"/><span style="display:none; padding:6px 15px;" id="message_status"></span><span style="float:right; padding:5px; display:none;" id="message_check_server_url"></span>
+			<?php if( $openotp_config['name'] === "rcdevsopenotp_server_url" ){ ?>
+			<input type="button" id="check_server_url" name="check_server_url" value="Test"/><img id="check_server_loading" src="<?php p($urlGenerator->imagePath('twofactor_rcdevsopenotp', 'ajax-loader.gif'));?>"/><span style="display:none; padding:6px 15px;" id="message_status"></span><span style="float:right; padding:5px; display:none;" id="message_check_server_url"></span>
 			<?php } ?>
 			<?php 	break;
 					case "checkbox": 
@@ -54,7 +55,7 @@ script('twofactor_rcdevsopenotp', 'script');
 			<div style="display:inline-block;">
 			<?php foreach($openotp_config['radios'] as $name => $radio): ?>	
 					<input type="radio" value="<?php p($radio['value']); ?>" name="<?php p($openotp_config['name']); ?>" id="<?php p($name); ?>" 
-						<?php if (!$_[$openotp_config['name']] && (isset($radio['checked']) && $radio['checked'] != NULL) ) p(' checked="checked"');
+						<?php if (!$_[$openotp_config['name']] && (isset($radio['checked']) && $radio['checked'] !== NULL) ) p(' checked="checked"');
 					  		elseif ($_[$openotp_config['name']] === $radio['value']) p(' checked="checked"'); ?>>
 					<label class="for_radio" for="<?php p($name); ?>"><?php p($l->t($radio['label']));?></label><br/>
 			<?php endforeach; ?>	

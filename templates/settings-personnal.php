@@ -24,7 +24,8 @@
  */
 
 script('twofactor_rcdevsopenotp', 'script');
-$allow_user_administer_openotp = OCP\Config::getAppValue('twofactor_rcdevsopenotp','rcdevsopenotp_allow_user_administer_openotp');
+$ocConfig = \OC::$server->getConfig();
+$allow_user_administer_openotp = $ocConfig->getAppValue('twofactor_rcdevsopenotp','rcdevsopenotp_allow_user_administer_openotp');
 ?>
 
 <div id="openotp_personnal_settings" class="section">

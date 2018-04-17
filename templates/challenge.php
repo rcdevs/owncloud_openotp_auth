@@ -51,7 +51,7 @@ html #openotp_submit, html #openotp_retry{ min-width:100%; width:100%; margin:0;
 	<div id="div_orange"></div>
 	<form method="POST" id="OpenOTPLoginForm" name="LoginForm">
 	
-	<?php if($_['status'] && $_['status'] == "pushSuccess") { ?>
+	<?php if($_['status'] && $_['status'] === "pushSuccess") { ?>
 		<legend>You have been connected<br/> You will be redirected in 2 seconds</legend>
 		<input type="hidden" name="challenge" value="passme" />
 		<input type="hidden" name="rcdevsopenotp_nonce" value="<?php p($_['challenge_params']['rcdevsopenotp_nonce']);?>" />
@@ -101,6 +101,7 @@ html #openotp_submit, html #openotp_retry{ min-width:100%; width:100%; margin:0;
 </fieldset>
 
 <?php /* <script type="text/javascript" nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>"> */
+//TODO: OC_App - Static method of private class must not be called
 $v = \OC_App::getAppVersions();
 $v['core'] = implode('.', \OCP\Util::getVersion());
 $versionHash = md5(implode(',', $v));	
@@ -111,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	$(document).ready(function () {
 		
 	/*Handle Push Challenge*/
-	<?php if($_['status'] && $_['status'] == "pushSuccess") { ?>
+	<?php if($_['status'] && $_['status'] === "pushSuccess") { ?>
 		$("#OpenOTPLoginForm").submit();
 	<?php } ?>
 	
@@ -147,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	<?php } ?>
 	
 
-	<?php if(!$_['error_msg'] && ($_['status'] && $_['status'] != "pushSuccess")):?>
+	<?php if(!$_['error_msg'] && ($_['status'] && $_['status'] !== "pushSuccess")):?>
 		
 	var c = <?php p($rcdevsopenotp_timeout); ?>;
 	var base = <?php p($rcdevsopenotp_timeout); ?>;
