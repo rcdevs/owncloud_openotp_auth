@@ -197,7 +197,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		if (isset($_COOKIE[$context_name])) $context = $_COOKIE[$context_name];
 		else $context = bin2hex(openssl_random_pseudo_bytes($context_size/2));			
 		
-		$domain = NULL;
+		$domain = "";
 		$password = NULL;
 		/* Don't check LDAP password, validate localy OR via third party User integration (LDAP plugin, etc...) */
 		$option = "-LDAP";
@@ -217,7 +217,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 			$domain = $t_domain['domain'];
 		}elseif (isset($_POST['rcdevsopenotp_domain']) && $_POST['rcdevsopenotp_domain'] !== "") $domain = $_POST['rcdevsopenotp_domain'];
 		else $domain = $t_domain;
-		if ($domain !== NULL) $this->logger->info("Domain found in username field", array('app' => 'twofactor_rcdevsopenotp'));
+		if ($domain !== "") $this->logger->info("Domain found in username field", array('app' => 'twofactor_rcdevsopenotp'));
 		
 		if ($state !== "") {
 			// OpenOTP Challenge
@@ -255,14 +255,15 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 
 					$this->logger->debug("--- Version hash $versionHash ---", array('app' => 'twofactor_rcdevsopenotp'));
 
+
+
+				}else $this->openOTPsendRequestStatus = "success";
 					// set context cookie
 					if (extension_loaded('openssl')) {			
 						if (strlen($context) === $context_size) setcookie($context_name, $context, time()+$context_time, '/', NULL, true, true);
 					}else{
 						$this->logger->info("Openssl extension not loaded - context authentication not available", array('app' => 'twofactor_rcdevsopenotp'));
 					}
-
-				}else $this->openOTPsendRequestStatus = "success";
 				break;
 			 case 2:
 				$this->logger->info("OpenOTP Response require Challenge", array('app' => 'twofactor_rcdevsopenotp'));
