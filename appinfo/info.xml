@@ -44,6 +44,6 @@
 		<php min-version="5.5"/>
         <lib>soap</lib>
         <lib>ldap</lib>
-        <owncloud min-version="9.1" max-version="10.0.7"/>
+        <owncloud min-version="9.1" max-version="10.0.10"/>
     </dependencies>	
 </info>

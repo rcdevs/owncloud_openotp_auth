@@ -215,9 +215,9 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		if (is_array($t_domain)){
 			$username = $t_domain['username'];
 			$domain = $t_domain['domain'];
+			$this->logger->info("Domain $domain found in username field", array('app' => 'twofactor_rcdevsopenotp'));
 		}elseif (isset($_POST['rcdevsopenotp_domain']) && $_POST['rcdevsopenotp_domain'] !== "") $domain = $_POST['rcdevsopenotp_domain'];
 		else $domain = $t_domain;
-		if ($domain !== "") $this->logger->info("Domain found in username field", array('app' => 'twofactor_rcdevsopenotp'));
 		
 		if ($state !== "") {
 			// OpenOTP Challenge
@@ -335,6 +335,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		if ($this->session->get('rcdevsopenotp_nonce')){
 			$rcdevsopenotp_nonce =  $this->session->get('rcdevsopenotp_nonce');
 		 	$this->session->remove('rcdevsopenotp_nonce');
+			$this->logger->debug("+++++++++++++++++++++ rcdevsopenotp_nonce has been removed from session +++++++++++++++++++++++", array('app' => 'twofactor_rcdevsopenotp'));
 		}		
 		if (isset($_POST['rcdevsopenotp_nonce'] )) $nonce = $_POST['rcdevsopenotp_nonce'];
 		//$this->logger->info("SESSION NONCE SUPP:" . $this->session->get('rcdevsopenotp_nonce'), array('app' => 'twofactor_rcdevsopenotp'));
@@ -342,6 +343,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		
         try {
 			$this->openOTPsendRequest($user, $challenge);
+			$this->logger->debug("Verify given challenge for user $user", array('app' => 'twofactor_rcdevsopenotp'));
         } catch (OpenOTPsendRequestException $e) {
             $error_message = $e->getMessage();
         }
