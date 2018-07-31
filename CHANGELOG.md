@@ -1,3 +1,5 @@
+1.2.2-1
+	- Add compatibility for oc10.0.8 - oc10.0.9
 1.2.2
 	- implement contextual authentication	
 	- app:check-code integrity
