@@ -1,6 +1,6 @@
 # Rcdevs Openotp
 
-RCDevs OpenOTP Plugin for Owncloud version 1.2.2
+RCDevs OpenOTP Plugin for Owncloud version 1.2.3
 Copyright (c) 2010-2018 RCDevs SA, All rights reserved.
 
 This program is free software; you can redistribute it and/or
@@ -52,8 +52,8 @@ or download our appliances:
 https://www.rcdevs.com/downloads/index.php?id=VMWare+Appliances
 
 ### **********   INSTALLATION   **********
-Compatible Owncloud 10.x (Tested on 10.0.4/10.0.7)
-Version 1.2.2
+Compatible Owncloud 10.x (Tested on 10.0.4/10.0.7/10.8.0)
+Version 1.2.3
 
 1.	If your PHP installation does not have the soap extension, install the php-soap 
 ..	package for your Linux distribution. With RedHat, do it with 'yum install php-soap'.
@@ -88,6 +88,8 @@ Version 1.2.2
 
 
 ### **********   CHANGELOG  **********
+1.2.3
+	- Add compatibility for oc10.8.0
 1.2.2-1
 	- Add compatibility for oc10.0.8 - oc10.0.9
 1.2.2

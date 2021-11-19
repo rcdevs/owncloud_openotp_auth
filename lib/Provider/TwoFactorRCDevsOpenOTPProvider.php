@@ -176,7 +176,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		$openotpAuth = new OpenotpAuth($this->logger, $params, $appPath);
 		
 		// check OpenOTP WSDL file
-		if (!$openotpAuth->checkFile('lib/Provider/openotp.wsdl')){
+		if (!$openotpAuth->checkFile('lib/AuthService/openotp.wsdl')){
 			$this->logger->error("Could not load OpenOTP WSDL file.", array('app' => 'twofactor_rcdevsopenotp'));
 			$message = $this->trans->t("Could not load OpenOTP WSDL file.");
 			throw new OpenOTPsendRequestException($message);
@@ -343,7 +343,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		
         try {
 			$this->openOTPsendRequest($user, $challenge);
-			$this->logger->debug("Verify given challenge for user $user", array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->debug("Verify given challenge for user {$user->getUID()}", array('app' => 'twofactor_rcdevsopenotp'));
         } catch (OpenOTPsendRequestException $e) {
             $error_message = $e->getMessage();
         }

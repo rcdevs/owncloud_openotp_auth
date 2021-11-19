@@ -65,10 +65,10 @@ class Application extends \OCP\AppFramework\App
     public function registerSettings()
     {
         App::registerAdmin('twofactor_rcdevsopenotp',
-            'settings/settings-admin');
+            'lib/Settings/settings-admin');
 
         App::registerPersonal('twofactor_rcdevsopenotp',
-            'settings/settings-personnal');
+            'lib/Settings/settings-personnal');
     }
 
 
