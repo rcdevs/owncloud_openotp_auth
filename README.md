@@ -90,6 +90,7 @@ Version 1.2.3
 ### **********   CHANGELOG  **********
 1.2.3
 	- Add compatibility for oc10.8.0
+	- Add a setting to ignore SSL/TLS certificate errors
 1.2.2-1
 	- Add compatibility for oc10.0.8 - oc10.0.9
 1.2.2
