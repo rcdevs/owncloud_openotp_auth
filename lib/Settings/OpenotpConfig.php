@@ -2,7 +2,7 @@
 /**
  * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package twofactor_rcdevsopenotp
+ * @package openotp_auth
  * @author Julien RICHARD
  * @copyright 2018 RCDEVS info@rcdevs.com
  *
@@ -25,7 +25,7 @@
 
 /**
  * OpenOTP authentication Config
- * @package twofactor_rcdevsopenotp
+ * @package openotp_auth
  */
 namespace OCA\TwoFactor_RCDevsOpenOTP\Settings;
 

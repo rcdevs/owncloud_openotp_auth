@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "twofactor_rcdevsopenotp",
+    "openotp_auth",
     {
     "Server error" : "Server error"
 },

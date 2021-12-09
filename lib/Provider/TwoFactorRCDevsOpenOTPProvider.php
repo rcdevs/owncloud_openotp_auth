@@ -2,7 +2,7 @@
 /**
  * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package twofactor_rcdevsopenotp
+ * @package openotp_auth
  * @author Julien RICHARD
  * @copyright 2018 RCDEVS info@rcdevs.com
  *
@@ -114,7 +114,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
     }
 
     /**
-     * Retrieve a value from twofactor_rcdevsopenotp
+     * Retrieve a value from openotp_auth
      *
      * @param string $key application config key
      * @param string $default application default value
@@ -122,11 +122,11 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
      */
     private function getAppValue($key, $default = NULL)
     {
-        return $this->config->getAppValue('twofactor_rcdevsopenotp', $key, $default);
+        return $this->config->getAppValue('openotp_auth', $key, $default);
     }
 
     /**
-     * Retrieve all values from twofactor_rcdevsopenotp
+     * Retrieve all values from openotp_auth
      *
      * @param string $key application config key
      * @param string $default application default value
@@ -157,7 +157,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		$username = $user->getUID();
 		//Clean Session Nonce /!\  must be used only for Push request response
 		$this->session->remove('rcdevsopenotp_nonce');
-		$this->logger->info("********* New OpenOTP Authentication *********", array('app' => 'twofactor_rcdevsopenotp'));
+		$this->logger->info("********* New OpenOTP Authentication *********", array('app' => 'openotp_auth'));
 		
 		$params = $this->getAllAppValue();
 		
@@ -166,25 +166,25 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		// OC >= 10.0.5
 		if (method_exists($this->appManager,'getAppPath')){
 			try {
-				$appPath = $this->appManager->getAppPath('twofactor_rcdevsopenotp');
+				$appPath = $this->appManager->getAppPath('openotp_auth');
 			} catch (AppPathNotFoundException $e) {}		
 		// OC <= 10.0.4	
 		//TODO: OC_App - Static method of private class must not be called
-		}else $appPath = \OC_App::getAppPath('twofactor_rcdevsopenotp');						
-		$appWebPath = \OC_App::getAppWebPath('twofactor_rcdevsopenotp');
+		}else $appPath = \OC_App::getAppPath('openotp_auth');						
+		$appWebPath = \OC_App::getAppWebPath('openotp_auth');
 		
 		$openotpAuth = new OpenotpAuth($this->logger, $params, $appPath);
 		
 		// check OpenOTP WSDL file
 		if (!$openotpAuth->checkFile('lib/AuthService/openotp.wsdl')){
-			$this->logger->error("Could not load OpenOTP WSDL file.", array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->error("Could not load OpenOTP WSDL file.", array('app' => 'openotp_auth'));
 			$message = $this->trans->t("Could not load OpenOTP WSDL file.");
 			throw new OpenOTPsendRequestException($message);
 		}
 			
 		// Check SOAP extension is loaded
 		if (!$openotpAuth->checkSOAPext()){
-			$this->logger->error("Your PHP installation is missing the SOAP extension.", array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->error("Your PHP installation is missing the SOAP extension.", array('app' => 'openotp_auth'));
 			$message = $this->trans->t("Your PHP installation is missing the SOAP extension.");
 			throw new OpenOTPsendRequestException($message);
 		}		
@@ -204,7 +204,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		
 		$POST = array();
 		$POST[] = $this->request->getParam("password");
-		//$this->logger->info("POST: ".serialize($POST), array('app' => 'twofactor_rcdevsopenotp'));
+		//$this->logger->info("POST: ".serialize($POST), array('app' => 'openotp_auth'));
 		
 		
 		$u2f = isset($_POST['openotp_u2f']) ? $_POST['openotp_u2f'] : "";
@@ -215,22 +215,22 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		if (is_array($t_domain)){
 			$username = $t_domain['username'];
 			$domain = $t_domain['domain'];
-			$this->logger->info("Domain $domain found in username field", array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->info("Domain $domain found in username field", array('app' => 'openotp_auth'));
 		}elseif (isset($_POST['rcdevsopenotp_domain']) && $_POST['rcdevsopenotp_domain'] !== "") $domain = $_POST['rcdevsopenotp_domain'];
 		else $domain = $t_domain;
 		
 		if ($state !== "") {
 			// OpenOTP Challenge
-			$this->logger->info("New OpenOTP Challenge for user " . $username, array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->info("New OpenOTP Challenge for user " . $username, array('app' => 'openotp_auth'));
 			$resp = $openotpAuth->openOTPChallenge( $username, $domain, $state, $otp, $u2f );
 		} else {
 			// OpenOTP Login
-			$this->logger->info( "New OpenOTP SimpleLogin for user " . $username, array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->info( "New OpenOTP SimpleLogin for user " . $username, array('app' => 'openotp_auth'));
 			$resp = $openotpAuth->openOTPSimpleLogin( $username, $domain, $password, $option, $context );
 		}		
 		
 		if (!$resp || !isset($resp['code'])) {
-			$this->logger->error("Invalid OpenOTP response for user " . $username, array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->error("Invalid OpenOTP response for user " . $username, array('app' => 'openotp_auth'));
 			$message[] = "Invalid OpenOTP response for user " . $username;
 		}
 		
@@ -238,11 +238,11 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 			 case 0:
 				if ($resp['message']) $message[] = $resp['message'];
 				else $message[] = $this->trans->t("OpenOTP Authentication failed for user ".$username);
-				$this->logger->info("OpenOTP Authentication failed for user ".$username , array('app' => 'twofactor_rcdevsopenotp'));
+				$this->logger->info("OpenOTP Authentication failed for user ".$username , array('app' => 'openotp_auth'));
 				$this->openOTPsendRequestStatus = "error";
 				break;
 			 case 1:
-				$this->logger->info("User $username has authenticated with OpenOTP.", array('app' => 'twofactor_rcdevsopenotp'));
+				$this->logger->info("User $username has authenticated with OpenOTP.", array('app' => 'openotp_auth'));
 				if(!$state){
 					$this->openOTPsendRequestStatus = "pushSuccess";
 					//TODO: OC_App - Static method of private class must not be called
@@ -253,7 +253,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 					$this->challenge_params['rcdevsopenotp_nonce'] = $rcdevsopenotp_nonce;
 					$this->session->set('rcdevsopenotp_nonce', $rcdevsopenotp_nonce);
 
-					$this->logger->debug("--- Version hash $versionHash ---", array('app' => 'twofactor_rcdevsopenotp'));
+					$this->logger->debug("--- Version hash $versionHash ---", array('app' => 'openotp_auth'));
 
 
 
@@ -262,11 +262,11 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 					if (extension_loaded('openssl')) {			
 						if (strlen($context) === $context_size) setcookie($context_name, $context, time()+$context_time, '/', NULL, true, true);
 					}else{
-						$this->logger->info("Openssl extension not loaded - context authentication not available", array('app' => 'twofactor_rcdevsopenotp'));
+						$this->logger->info("Openssl extension not loaded - context authentication not available", array('app' => 'openotp_auth'));
 					}
 				break;
 			 case 2:
-				$this->logger->info("OpenOTP Response require Challenge", array('app' => 'twofactor_rcdevsopenotp'));
+				$this->logger->info("OpenOTP Response require Challenge", array('app' => 'openotp_auth'));
 
 				$this->challenge_params = array( 'rcdevsopenotp_otpChallenge' => $resp['otpChallenge'],
 										  'rcdevsopenotp_u2fChallenge' => $resp['u2fChallenge'],
@@ -283,7 +283,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 				break;
 			 default:
 			 	$this->trans->t("OpenOTP Authentication failed for user ".$username);
-				$this->logger->info("OpenOTP Authentication failed for user ".$username, array('app' => 'twofactor_rcdevsopenotp'));
+				$this->logger->info("OpenOTP Authentication failed for user ".$username, array('app' => 'openotp_auth'));
 				$this->openOTPsendRequestStatus = "error";
 				break;
 		}
@@ -305,7 +305,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
             $error_message = $e->getMessage();
         }
 
-        $template = new Template('twofactor_rcdevsopenotp', 'challenge');
+        $template = new Template('openotp_auth', 'challenge');
         $template->assign("userID", $user->getUID());
         $template->assign("status", $this->openOTPsendRequestStatus);
         $template->assign("error_msg", isset($error_message) ? $error_message : "" );
@@ -325,9 +325,9 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
      */
     public function verifyChallenge(IUser $user, $challenge)
     {
-		/*$this->logger->info("----- verifyChallenge -------:" . $challenge, array('app' => 'twofactor_rcdevsopenotp'));
-    	$this->logger->info("POST NONCE:" . $_POST['rcdevsopenotp_nonce'], array('app' => 'twofactor_rcdevsopenotp'));
-		$this->logger->info("SESSION NONCE:" . $this->session->get('rcdevsopenotp_nonce'), array('app' => 'twofactor_rcdevsopenotp'));*/
+		/*$this->logger->info("----- verifyChallenge -------:" . $challenge, array('app' => 'openotp_auth'));
+    	$this->logger->info("POST NONCE:" . $_POST['rcdevsopenotp_nonce'], array('app' => 'openotp_auth'));
+		$this->logger->info("SESSION NONCE:" . $this->session->get('rcdevsopenotp_nonce'), array('app' => 'openotp_auth'));*/
 		
 		$rcdevsopenotp_nonce = "";
 		$nonce = "";
@@ -335,15 +335,15 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 		if ($this->session->get('rcdevsopenotp_nonce')){
 			$rcdevsopenotp_nonce =  $this->session->get('rcdevsopenotp_nonce');
 		 	$this->session->remove('rcdevsopenotp_nonce');
-			$this->logger->debug("+++++++++++++++++++++ rcdevsopenotp_nonce has been removed from session +++++++++++++++++++++++", array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->debug("+++++++++++++++++++++ rcdevsopenotp_nonce has been removed from session +++++++++++++++++++++++", array('app' => 'openotp_auth'));
 		}		
 		if (isset($_POST['rcdevsopenotp_nonce'] )) $nonce = $_POST['rcdevsopenotp_nonce'];
-		//$this->logger->info("SESSION NONCE SUPP:" . $this->session->get('rcdevsopenotp_nonce'), array('app' => 'twofactor_rcdevsopenotp'));
+		//$this->logger->info("SESSION NONCE SUPP:" . $this->session->get('rcdevsopenotp_nonce'), array('app' => 'openotp_auth'));
 		if($challenge === "passme" && $nonce && $rcdevsopenotp_nonce && $nonce === $rcdevsopenotp_nonce) return true;
 		
         try {
 			$this->openOTPsendRequest($user, $challenge);
-			$this->logger->debug("Verify given challenge for user {$user->getUID()}", array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->debug("Verify given challenge for user {$user->getUID()}", array('app' => 'openotp_auth'));
         } catch (OpenOTPsendRequestException $e) {
             $error_message = $e->getMessage();
         }
@@ -373,7 +373,7 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
     public function isTwoFactorAuthEnabledForUser(IUser $user)
     {
 		// Get User Config
-		$user_enable_openotp = $this->config->getUserValue( $user->getUID(), 'twofactor_rcdevsopenotp', 'enable_openotp');
+		$user_enable_openotp = $this->config->getUserValue( $user->getUID(), 'openotp_auth', 'enable_openotp');
 		$allow_user_administer_openotp = $this->getAppValue('rcdevsopenotp_allow_user_administer_openotp');
 		$authentication_method = $this->getAppValue('rcdevsopenotp_authentication_method'); 
 		// 0 => AUTHENTICATION_METHOD_STD (Standard)
@@ -381,11 +381,11 @@ class TwoFactorRCDevsOpenOTPProvider implements IProvider
 
 		if (( $allow_user_administer_openotp === "off" && $authentication_method === "1") ||
 		    ( $allow_user_administer_openotp === "on" && $user_enable_openotp === "yes") ){
-			  //$this->logger->info("2FA ACTIVED", array('app' => 'twofactor_rcdevsopenotp'));		
+			  //$this->logger->info("2FA ACTIVED", array('app' => 'openotp_auth'));		
 			  return true;
 		  }
 		  
-		  //$this->logger->info("2FA NOT ACTIVED", array('app' => 'twofactor_rcdevsopenotp'));		
+		  //$this->logger->info("2FA NOT ACTIVED", array('app' => 'openotp_auth'));		
 		  return false;
     }
 

@@ -2,7 +2,7 @@
 /**
  * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package twofactor_rcdevsopenotp
+ * @package openotp_auth
  * @author Julien RICHARD
  * @copyright 2018 RCDEVS info@rcdevs.com
  *
@@ -28,8 +28,8 @@ use OCA\TwoFactor_RCDevsOpenOTP\AppInfo\Application;
 $app = new Application();
 // Register the configuration settings templates
 $app->registerSettings();
-\OC::$CLASSPATH['OCA\\TwoFactor_RCDevsOpenOTP\\Settings\\OpenotpConfig'] = 'twofactor_rcdevsopenotp/settings/openotp.config.php';
-\OC::$CLASSPATH['OCA\\TwoFactor_RCDevsOpenOTP\\AuthService\\OpenotpAuth'] = 'twofactor_rcdevsopenotp/lib/Provider/openotp.class.php';
+\OC::$CLASSPATH['OCA\\TwoFactor_RCDevsOpenOTP\\Settings\\OpenotpConfig'] = 'openotp_auth/settings/openotp.config.php';
+\OC::$CLASSPATH['OCA\\TwoFactor_RCDevsOpenOTP\\AuthService\\OpenotpAuth'] = 'openotp_auth/lib/Provider/openotp.class.php';
 
 if(class_exists('\\OCP\\AppFramework\\Http\\EmptyContentSecurityPolicy')) { 
 	$manager = \OC::$server->getContentSecurityPolicyManager();
@@ -38,9 +38,9 @@ if(class_exists('\\OCP\\AppFramework\\Http\\EmptyContentSecurityPolicy')) {
 	$manager->addDefaultPolicy($policy);
 }
 
-\OCP\Util::addStyle('twofactor_rcdevsopenotp', 'settings');
-\OCP\Util::addScript('twofactor_rcdevsopenotp', 'script');
-\OCP\Util::addScript('twofactor_rcdevsopenotp', 'fidou2f');
+\OCP\Util::addStyle('openotp_auth', 'settings');
+\OCP\Util::addScript('openotp_auth', 'script');
+\OCP\Util::addScript('openotp_auth', 'fidou2f');
 
 //TODO: OC_User - Static method of private class must not be called
 $isadmin = \OC_User::isAdminUser(\OC_User::getUser());
@@ -48,10 +48,10 @@ if($isadmin){
 	\OC::$server->getNavigationManager()->add(function () {
 	    $urlGenerator = \OC::$server->getURLGenerator();
 	    return [
-	        'id' => 'twofactor_rcdevsopenotp',
+	        'id' => 'openotp_auth',
 	        'order' => 100,
-	        'href' => $urlGenerator->linkToRoute('twofactor_rcdevsopenotp.settings.index'),
-	        'icon' => $urlGenerator->imagePath('twofactor_rcdevsopenotp', 'app.svg'),
+	        'href' => $urlGenerator->linkToRoute('openotp_auth.settings.index'),
+	        'icon' => $urlGenerator->imagePath('openotp_auth', 'app.svg'),
 			'name' => "OpenOTP"
 	    ];
 	});

@@ -2,7 +2,7 @@
 /**
  * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package twofactor_rcdevsopenotp
+ * @package openotp_auth
  * @author Julien RICHARD
  * @copyright 2018 RCDEVS info@rcdevs.com
  *
@@ -84,14 +84,14 @@ class SettingsController extends Controller {
 	public function index() {
 		
 		foreach( $this->openotpconfig as $_openotp_confname => $_openotp_config ){
-		    $params[$_openotp_config['name']] = $this->config->getAppValue( 'twofactor_rcdevsopenotp',$_openotp_config['name'],$_openotp_config['default_value'] );
+		    $params[$_openotp_config['name']] = $this->config->getAppValue( 'openotp_auth',$_openotp_config['name'],$_openotp_config['default_value'] );
 		}
 		
 		$this->logger->debug("++ User ++  from Class " . get_class($this->User), array('app' => 'rcdevsopenotp'));
 		$params['user'] = $this->User->getUID();
 		$params['openotp_allconfig'] = $this->openotpconfig;
 
-		return new TemplateResponse('twofactor_rcdevsopenotp', 'settings-admin', $params);
+		return new TemplateResponse('openotp_auth', 'settings-admin', $params);
 	}
 	
 	/**
@@ -110,14 +110,14 @@ class SettingsController extends Controller {
 			
 			foreach( $this->openotpconfig as $_openotp_confname => $_openotp_config ){
 				if($_openotp_config['type'] === "checkbox" && !isset( $POST[$_openotp_config['name']] ) )
-					$this->config->setAppValue('twofactor_rcdevsopenotp', $_openotp_config['name'], "off");
+					$this->config->setAppValue('openotp_auth', $_openotp_config['name'], "off");
 				else{
 					if( isset($POST[$_openotp_config['name']]) && $POST[$_openotp_config['name']] === "" && isset($_openotp_config['default_value']) ){
-						$this->config->setAppValue( 'twofactor_rcdevsopenotp', $_openotp_config['name'], $_openotp_config['default_value'] );
+						$this->config->setAppValue( 'openotp_auth', $_openotp_config['name'], $_openotp_config['default_value'] );
 					}else{
 						//$this->logger->debug("setAppValue Name: " . $_openotp_config['name'], array('app' => 'rcdevsopenotp'));
 						//$this->logger->debug("setAppValue Value: " . $POST[$_openotp_config['name']], array('app' => 'rcdevsopenotp'));
-						$this->config->setAppValue( 'twofactor_rcdevsopenotp', $_openotp_config['name'], $POST[$_openotp_config['name']] );
+						$this->config->setAppValue( 'openotp_auth', $_openotp_config['name'], $POST[$_openotp_config['name']] );
 					}
 				}
 			}
@@ -127,7 +127,7 @@ class SettingsController extends Controller {
 	    if( !$POST ) return new DataResponse(['status' => "error", 'message' => "An error occured, please contact administrator" ]);
 		
 		if( $POST && isset($POST["openotp_psettings_sent"]) ){	
-			if( isset($POST["enable_openotp"]) ) $this->config->setUserValue( $this->User->getUID(), 'twofactor_rcdevsopenotp', 'enable_openotp', $POST["enable_openotp"] );
+			if( isset($POST["enable_openotp"]) ) $this->config->setUserValue( $this->User->getUID(), 'openotp_auth', 'enable_openotp', $POST["enable_openotp"] );
 			
 			return new DataResponse(['status' => "success", 'message' => "Your settings have been saved succesfully" ]);
 		}else
@@ -138,7 +138,7 @@ class SettingsController extends Controller {
 	 * @NoAdminRequired
 	 */	
 	public function checkServerUrl(){
-		$this->logger->info("********* New OpenOTP Authentication Status *********", array('app' => 'twofactor_rcdevsopenotp'));
+		$this->logger->info("********* New OpenOTP Authentication Status *********", array('app' => 'openotp_auth'));
 
 		$server_url = $_POST['server_url'];
 		$ignore_ssl_errors = filter_var($_POST['ignore_ssl_errors'], FILTER_VALIDATE_BOOLEAN);
@@ -149,7 +149,7 @@ class SettingsController extends Controller {
 		
 		foreach( $_openotp_configs as $_openotp_confname => $_openotp_config ){				
 	        $params[$_openotp_config['name']] = $this->config->getAppValue(
-	            'twofactor_rcdevsopenotp', $_openotp_config['name'], $_openotp_config['default_value']
+	            'openotp_auth', $_openotp_config['name'], $_openotp_config['default_value']
 	        );
 		}
 		$params['rcdevsopenotp_remote_addr'] = $this->request->getRemoteAddress();
@@ -159,11 +159,11 @@ class SettingsController extends Controller {
 		 // OC >= 10.0.5
 		if (method_exists(\OC::$server->getAppManager(),'getAppPath')){
 			try {
-				$appPath = \OC::$server->getAppManager()->getAppPath('twofactor_rcdevsopenotp');
+				$appPath = \OC::$server->getAppManager()->getAppPath('openotp_auth');
 			} catch (AppPathNotFoundException $e) {}	
 		 // OC <= 10.0.4	
 		 //TODO: OC_App - Static method of private class must not be called
-		}else $appPath = \OC_App::getAppPath('twofactor_rcdevsopenotp');
+		}else $appPath = \OC_App::getAppPath('openotp_auth');
 		
 		$openotpAuth = new openotpAuth($this->logger, $params, $appPath);
 		try{
@@ -175,7 +175,7 @@ class SettingsController extends Controller {
 		if( isset($resp) )
 			return new DataResponse(['status' => "success", 'openotpStatus' => $resp['status'], 'message' => nl2br($resp['message']) ]);
 		else{
-			$this->logger->error("Could not connect to host", array('app' => 'twofactor_rcdevsopenotp'));
+			$this->logger->error("Could not connect to host", array('app' => 'openotp_auth'));
 			return new DataResponse(['status' => "error", 'message' => 'Could not connect to host' ]);
 		}
 	}

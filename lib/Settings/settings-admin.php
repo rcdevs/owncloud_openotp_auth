@@ -2,7 +2,7 @@
 /**
  * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package twofactor_rcdevsopenotp
+ * @package openotp_auth
  * @author Julien RICHARD
  * @copyright 2018 RCDEVS info@rcdevs.com
  *
@@ -25,19 +25,19 @@
 use OCA\TwoFactor_RCDevsOpenOTP\Settings\OpenotpConfig;
 
 $_openotp_configs = OpenotpConfig::$_openotp_configs;
-$_openotp_admintmpl = new OCP\Template('twofactor_rcdevsopenotp', 'settings-admin');
+$_openotp_admintmpl = new OCP\Template('openotp_auth', 'settings-admin');
 $_openotp_admintmpl->assign('openotp_allconfig', $_openotp_configs);
 
 $ocConfig = \OC::$server->getConfig();
 
 foreach( $_openotp_configs as $_openotp_confname => $_openotp_config ){
     if ($_POST && isset($_POST[$_openotp_config['name']]) ) {        
-        $ocConfig->setAppValue('twofactor_rcdevsopenotp',$_openotp_config['name'],$_POST[$_openotp_config['name']]);
+        $ocConfig->setAppValue('openotp_auth',$_openotp_config['name'],$_POST[$_openotp_config['name']]);
     }
     $_openotp_admintmpl->assign(
         $_openotp_config['name'],
         $ocConfig->getAppValue(
-            'twofactor_rcdevsopenotp',$_openotp_config['name'],$_openotp_config['default_value']
+            'openotp_auth',$_openotp_config['name'],$_openotp_config['default_value']
         )
     );	
 }

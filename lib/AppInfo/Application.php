@@ -2,7 +2,7 @@
 /**
  * Owncloud - RCDevs OpenOTP Two-factor Authentication
  *
- * @package twofactor_rcdevsopenotp
+ * @package openotp_auth
  * @author Julien RICHARD
  * @copyright 2018 RCDEVS info@rcdevs.com
  *
@@ -36,7 +36,7 @@ class Application extends \OCP\AppFramework\App
      */
     public function __construct(array $urlParams = array())
     {
-        parent::__construct('twofactor_rcdevsopenotp', $urlParams);
+        parent::__construct('openotp_auth', $urlParams);
         $container = $this->getContainer();
 		
         /**
@@ -64,10 +64,10 @@ class Application extends \OCP\AppFramework\App
      */
     public function registerSettings()
     {
-        App::registerAdmin('twofactor_rcdevsopenotp',
+        App::registerAdmin('openotp_auth',
             'lib/Settings/settings-admin');
 
-        App::registerPersonal('twofactor_rcdevsopenotp',
+        App::registerPersonal('openotp_auth',
             'lib/Settings/settings-personnal');
     }
 

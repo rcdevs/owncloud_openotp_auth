@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <info>
-	<id>twofactor_rcdevsopenotp</id>
+	<id>openotp_auth</id>
 	<name>OpenOTP Two Factor Authentication</name>
     <description>
 		**RCDevs OpenOTP Application enables two-factor authentication for your users using your personnal Cloud.**

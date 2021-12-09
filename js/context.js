@@ -1,10 +1,10 @@
 /**
- * Owncloud - twofactor_rcdevsopenotp
+ * Owncloud - openotp_auth
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
  *
- * @package twofactor_rcdevsopenotp
+ * @package openotp_auth
  * @author Julien RICHARD
  * @copyright 2018 RCDEVS info@rcdevs.com
  */
